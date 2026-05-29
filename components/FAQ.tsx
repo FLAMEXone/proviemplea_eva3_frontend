@@ -34,16 +34,16 @@ export default function FAQ() {
   ];
 
   return (
-    <section id="faqs" className="w-full py-20 sm:py-28 bg-white text-slate-800 border-b border-slate-100">
+    <section id="faqs" className="w-full py-20 sm:py-28 bg-white text-slate-800 border-b border-slate-100 dark:bg-slate-950 dark:text-slate-200 dark:border-slate-900">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <div className="text-center flex flex-col gap-4 mb-12">
-          <div className="inline-flex self-center items-center gap-2 rounded-full bg-blue-100 px-3 py-1 text-xs font-bold tracking-wide text-blue-700 uppercase">
+          <div className="inline-flex self-center items-center gap-2 rounded-full bg-blue-100 dark:bg-blue-900/30 px-3 py-1 text-xs font-bold tracking-wide text-blue-700 dark:text-blue-400 uppercase">
             💡 Dudas Frecuentes
           </div>
-          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
             Preguntas Frecuentes del Portal
           </h2>
-          <p className="text-slate-600 max-w-xl mx-auto leading-relaxed">
+          <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
             Resuelve tus dudas sobre el funcionamiento de la búsqueda inversa, la privacidad del currículum ciego y el flujo de intermediación municipal.
           </p>
         </div>
@@ -53,12 +53,12 @@ export default function FAQ() {
             <AccordionItem
               key={faq.id}
               value={faq.id}
-              className="bg-slate-50 border border-slate-100 rounded-2xl px-6 py-2 shadow-sm shadow-slate-100/50 hover:shadow-md transition-all duration-200"
+              className="bg-slate-50 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-800/80 rounded-2xl px-6 py-2 shadow-sm shadow-slate-100/50 dark:shadow-none hover:shadow-md transition-all duration-200"
             >
-              <AccordionTrigger className="text-left font-bold text-slate-900 hover:text-blue-600 hover:no-underline text-base sm:text-lg">
+              <AccordionTrigger className="text-left font-bold text-slate-900 dark:text-slate-100 hover:text-blue-600 dark:hover:text-blue-400 hover:no-underline text-base sm:text-lg">
                 {faq.question}
               </AccordionTrigger>
-              <AccordionContent className="text-slate-600 leading-relaxed text-sm sm:text-base pt-2">
+              <AccordionContent className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm sm:text-base pt-2">
                 {faq.answer}
               </AccordionContent>
             </AccordionItem>
