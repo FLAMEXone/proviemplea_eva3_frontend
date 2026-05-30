@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface NavbarProps {
   theme?: "light" | "dark" | null;
@@ -11,13 +13,18 @@ interface NavbarProps {
 
 export default function Navbar({ theme, toggleTheme }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isEmpresasRoute = pathname === "/empresas";
+  const buttonText = isEmpresasRoute ? "Para Talentos" : "Para Empresas";
+  const buttonHref = isEmpresasRoute ? "/" : "/empresas";
 
   const navLinks = [
-    { name: "Inicio", href: "#inicio" },
-    { name: "Nosotros", href: "#nosotros" },
-    { name: "Talentos", href: "#talentos" },
-    { name: "Testimonios", href: "#testimonios" },
-    { name: "FAQs", href: "#faqs" },
+    { name: "Inicio", href: isEmpresasRoute ? "/" : "#inicio" },
+    { name: "Nosotros", href: isEmpresasRoute ? "/#nosotros" : "#nosotros" },
+    { name: "Talentos", href: isEmpresasRoute ? "/#talentos" : "#talentos" },
+    { name: "Testimonios", href: isEmpresasRoute ? "/#testimonios" : "#testimonios" },
+    { name: "FAQs", href: isEmpresasRoute ? "/#faqs" : "#faqs" },
   ];
 
   return (
@@ -25,14 +32,14 @@ export default function Navbar({ theme, toggleTheme }: NavbarProps) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 font-bold text-white shadow-md shadow-blue-500/20">
               PE
             </div>
             <span className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
               Provi<span className="text-blue-600">Emplea</span>
             </span>
-          </div>
+          </Link>
 
           {/* Desktop Links */}
           <div className="hidden md:flex md:items-center md:gap-6">
@@ -61,9 +68,11 @@ export default function Navbar({ theme, toggleTheme }: NavbarProps) {
               </button>
             )}
 
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all shadow-md shadow-blue-500/10 rounded-xl">
-              Para Empresas
-            </Button>
+            <Link href={buttonHref}>
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all shadow-md shadow-blue-500/10 rounded-xl">
+                {buttonText}
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -106,9 +115,11 @@ export default function Navbar({ theme, toggleTheme }: NavbarProps) {
                 )}
               </button>
             )}
-            <Button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl">
-              Para Empresas
-            </Button>
+            <Link href={buttonHref} className="flex-1 flex" onClick={() => setIsOpen(false)}>
+              <Button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl">
+                {buttonText}
+              </Button>
+            </Link>
           </div>
         </div>
       )}

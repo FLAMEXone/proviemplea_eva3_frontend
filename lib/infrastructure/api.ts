@@ -1,5 +1,7 @@
-import { type Persona } from "@/lib/interfaces/persona.interface";
-import { type Estadisticas } from "@/lib/interfaces/estadisticas.interface";
+import { IPersona } from "@/lib/domain/interfaces/persona.interface";
+import { IEstadisticas } from "@/lib/domain/interfaces/estadisticas.interface";
+import { IEmpresa } from "@/lib/domain/interfaces/empresa.interface";
+import { IContactoSolicitado } from "@/lib/domain/interfaces/contacto.interface";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
 
@@ -20,7 +22,10 @@ export async function fetchApi<T>(path: string, options?: RequestInit): Promise<
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || `Error HTTP! Estado: ${response.status}`);
+    const error = new Error(errorData.message || `Error HTTP! Estado: ${response.status}`);
+    (error as any).status = response.status;
+    (error as any).errors = errorData.errors;
+    throw error;
   }
 
   const result = await response.json();
@@ -34,7 +39,7 @@ export async function fetchApi<T>(path: string, options?: RequestInit): Promise<
 export async function getTalentos(filters?: {
   validado?: boolean;
   nivel_educacional?: string;
-}): Promise<Persona[]> {
+}): Promise<IPersona[]> {
   const params = new URLSearchParams();
   if (filters?.validado !== undefined) {
     params.append("validado", String(filters.validado));
@@ -45,13 +50,59 @@ export async function getTalentos(filters?: {
 
   const queryString = params.toString();
   const path = `/personas${queryString ? `?${queryString}` : ""}`;
-  return fetchApi<Persona[]>(path);
+  return fetchApi<IPersona[]>(path);
 }
 
 /**
  * Obtener estadísticas consolidadas y acumuladas de la plataforma (Cached en Backend).
  * GET /api/admin/estadisticas
  */
-export async function getEstadisticas(): Promise<Estadisticas> {
-  return fetchApi<Estadisticas>("/admin/estadisticas");
+export async function getEstadisticas(): Promise<IEstadisticas> {
+  return fetchApi<IEstadisticas>("/admin/estadisticas");
+}
+
+/**
+ * Obtener lista de empresas validadas municipales.
+ * GET /api/empresas
+ */
+export async function getEmpresas(filters?: {
+  tipo_empresa?: string;
+}): Promise<IEmpresa[]> {
+  const params = new URLSearchParams();
+  if (filters?.tipo_empresa) {
+    params.append("tipo_empresa", filters.tipo_empresa);
+  }
+  const queryString = params.toString();
+  const path = `/empresas${queryString ? `?${queryString}` : ""}`;
+  return fetchApi<IEmpresa[]>(path);
+}
+
+/**
+ * Registrar una nueva solicitud de intermediación laboral/contacto.
+ * POST /api/admin/contactos
+ */
+export async function crearContacto(
+  empresaId: string,
+  personaId: string,
+  notasAdmin?: string
+): Promise<IContactoSolicitado> {
+  return fetchApi<IContactoSolicitado>("/admin/contactos", {
+    method: "POST",
+    body: JSON.stringify({
+      empresa_id: empresaId,
+      persona_id: personaId,
+      notas_admin: notasAdmin,
+    }),
+  });
+}
+
+/**
+ * Registrar una nueva empresa solicitante de convenio.
+ * POST /api/empresas
+ */
+export async function crearEmpresa(data: Partial<IEmpresa>): Promise<IEmpresa> {
+  return fetchApi<IEmpresa>("/empresas", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
 }

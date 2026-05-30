@@ -1,4 +1,4 @@
-export interface Estadisticas {
+export interface IEstadisticas {
   total_personas: number;
   personas_validadas: number;
   total_empresas: number;

@@ -11,15 +11,15 @@ import { TalentCard } from "@/components/TalentCard";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 import { Sparkles, Loader2, Database, AlertCircle, X } from "lucide-react";
 import { getTalentos, getEstadisticas } from "@/lib/infrastructure/api";
-import { type Persona } from "@/lib/interfaces/persona.interface";
-import { type Estadisticas } from "@/lib/interfaces/estadisticas.interface";
+import { IPersona } from "@/lib/domain/interfaces/persona.interface";
+import { IEstadisticas } from "@/lib/domain/interfaces/estadisticas.interface";
 
 export default function Home() {
   const [theme, setTheme] = React.useState<"light" | "dark" | null>(null);
   
   // Estados para API dinámicos
-  const [talentos, setTalentos] = React.useState<Persona[]>([]);
-  const [stats, setStats] = React.useState<Estadisticas>({
+  const [talentos, setTalentos] = React.useState<IPersona[]>([]);
+  const [stats, setStats] = React.useState<IEstadisticas>({
     total_personas: 0,
     personas_validadas: 0,
     total_empresas: 0,
@@ -63,7 +63,8 @@ export default function Home() {
       } catch (err) {
         console.warn("Laravel API offline, cargando fallbacks y activando Modo Demostración:", err);
         
-        const { MOCK_TALENTOS, MOCK_ESTADISTICAS } = await import("@/lib/infrastructure/mockData");
+        const { MOCK_TALENTOS } = await import("@/lib/infrastructure/mocks/personas.mock");
+        const { MOCK_ESTADISTICAS } = await import("@/lib/infrastructure/mocks/estadisticas.mock");
         setTalentos(MOCK_TALENTOS.filter(t => t.validado));
         setStats(MOCK_ESTADISTICAS);
         setShowMockToast(true);
