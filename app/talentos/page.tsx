@@ -10,15 +10,67 @@ import {
   Sparkles,
   Database
 } from "lucide-react";
-import { getEmpresas } from "@/lib/infrastructure/api";
-import { IEmpresa } from "@/lib/domain/interfaces/empresa.interface";
-import EmpresaCard from "@/components/empresas/EmpresaCard";
+import { getTalentos } from "@/lib/infrastructure/api";
+import { IPersona } from "@/lib/domain/interfaces/persona.interface";
+import { TalentCard } from "@/components/TalentCard";
 
-export default function EmpresasPage() {
+function isTalentoCompleto(talento: IPersona): boolean {
+  const email = talento.email?.trim();
+  const telefono = talento.telefono?.trim();
+  const resumen = talento.resumen?.trim();
+  const nivel = talento.nivel_educacional;
+  const titulo = talento.titulo_carrera?.trim();
+  const anio = talento.anio_egreso;
+  const aniosExp = talento.anios_experiencia;
+  const renta = talento.rango_renta?.trim();
+  const jornada = talento.tipo_jornada;
+  const modalidad = talento.modalidad;
+  const portafolio = talento.portafolio_url?.trim();
+
+  // Competencias (array o string no vacío)
+  const comps = Array.isArray(talento.competencias)
+    ? talento.competencias.length > 0
+    : !!(talento.competencias as any)?.trim();
+
+  // Áreas (array o string no vacío)
+  const areas = Array.isArray(talento.areas_experiencia)
+    ? talento.areas_experiencia.length > 0
+    : !!(talento.areas_experiencia as any)?.trim();
+
+  // Cursos (array o string no vacío)
+  const cursos = Array.isArray(talento.cursos)
+    ? talento.cursos.length > 0
+    : !!(talento.cursos as any)?.trim();
+
+  // Idiomas (array o string no vacío)
+  const idiomas = Array.isArray(talento.idiomas)
+    ? talento.idiomas.length > 0
+    : !!(talento.idiomas as any)?.trim();
+
+  return !!(
+    email &&
+    telefono &&
+    resumen &&
+    nivel &&
+    titulo &&
+    anio !== null && anio !== undefined &&
+    aniosExp !== null && aniosExp !== undefined &&
+    renta &&
+    jornada &&
+    modalidad &&
+    portafolio &&
+    comps &&
+    areas &&
+    cursos &&
+    idiomas
+  );
+}
+
+export default function TalentosPage() {
   const [theme, setTheme] = React.useState<"light" | "dark" | null>(null);
 
   // Estados de datos
-  const [empresas, setEmpresas] = React.useState<IEmpresa[]>([]);
+  const [talentos, setTalentos] = React.useState<IPersona[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [isDemoMode, setIsDemoMode] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -54,14 +106,14 @@ export default function EmpresasPage() {
   React.useEffect(() => {
     async function loadData() {
       try {
-        const fetchedEmpresas = await getEmpresas();
-        setEmpresas(fetchedEmpresas);
+        const fetchedTalentos = await getTalentos();
+        setTalentos(fetchedTalentos);
       } catch (err) {
-        console.warn("Laravel API offline, activando Modo Demostración en directorio:", err);
+        console.warn("Laravel API offline, activando Modo Demostración en vitrina:", err);
         setIsDemoMode(true);
         
-        const { MOCK_EMPRESAS } = await import("@/lib/infrastructure/mocks/empresa.mock");
-        setEmpresas(MOCK_EMPRESAS);
+        const { MOCK_TALENTOS } = await import("@/lib/infrastructure/mocks/personas.mock");
+        setTalentos(MOCK_TALENTOS);
       } finally {
         setLoading(false);
       }
@@ -69,11 +121,15 @@ export default function EmpresasPage() {
     loadData();
   }, []);
 
-  // Filtrado de empresas por búsqueda reactiva
-  const filteredEmpresas = empresas.filter(emp => 
-    emp.nombre_empresa.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (emp.rubro?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false) ||
-    emp.rut_empresa.toLowerCase().includes(searchQuery.toLowerCase())
+  // Filtrado de talentos por búsqueda reactiva
+  const filteredTalentos = talentos.map(tal => ({
+    ...tal,
+    validado: isDemoMode ? isTalentoCompleto(tal) : !!tal.validado
+  })).filter(tal => 
+    tal.titulo_carrera?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    tal.codigo_talento.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (Array.isArray(tal.competencias) && tal.competencias.some(c => c.toLowerCase().includes(searchQuery.toLowerCase()))) ||
+    (typeof tal.competencias === "string" && tal.competencias.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (
@@ -82,17 +138,17 @@ export default function EmpresasPage() {
 
       {/* Banner decorativo */}
       <div className="relative overflow-hidden bg-slate-900 text-white py-12 dark:bg-black/40">
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/30 to-teal-600/30 opacity-40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/30 to-indigo-600/30 opacity-40" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-xs font-bold uppercase tracking-wider mb-4 animate-pulse">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-full text-xs font-bold uppercase tracking-wider mb-4 animate-pulse">
             <Sparkles className="w-3.5 h-3.5" />
-            Convenios Vigentes
+            Vitrina de Talentos
           </div>
           <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white leading-tight">
-            Directorio de Empresas Aliadas
+            Currículums Ciegos de Providencia
           </h1>
           <p className="mt-3 text-slate-300 text-sm max-w-xl mx-auto leading-relaxed">
-            Conoce a las organizaciones con convenio activo en Providencia. Estas corporaciones impulsan la inclusión social y participan de la vitrina de reclutamiento sin sesgos.
+            Explora los perfiles de vecinos postulantes que superaron las validaciones. Tu organización puede solicitar su intermediación confidencial sin sesgos de selección.
           </p>
         </div>
       </div>
@@ -107,7 +163,7 @@ export default function EmpresasPage() {
                 Modo Demostración Activo
               </h4>
               <p className="text-amber-700 dark:text-slate-300 mt-0.5 leading-relaxed">
-                El backend municipal no está activo. Se han cargado las empresas mockeadas de Providencia para verificar la responsividad y la búsqueda reactiva local.
+                El backend municipal no está activo. Se han cargado los candidatos mockeados simulando perfiles en vivo para verificar la completitud y el ruteo estático del portal.
               </p>
             </div>
           </div>
@@ -120,10 +176,10 @@ export default function EmpresasPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h2 className="text-xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
-                Alianzas Corporativas de Providencia
+                Candidatos Autorizados para Intermediación
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Nómina de empresas que participan activamente en los procesos de intermediación inclusiva.
+                Perfiles inclusivos que cumplen con los requisitos de intermediación municipal de Providencia.
               </p>
             </div>
             {/* Buscador */}
@@ -135,29 +191,29 @@ export default function EmpresasPage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar por nombre, rubro o RUT..."
-                className="block w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-xs font-semibold text-slate-800 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm"
+                placeholder="Buscar por rubro, código o competencias..."
+                className="block w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-xs font-semibold text-slate-800 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
               />
             </div>
           </div>
 
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20 gap-3">
-              <Loader2 className="w-10 h-10 animate-spin text-emerald-600" />
-              <p className="text-xs font-medium text-slate-500">Recuperando nómina de empresas...</p>
+              <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
+              <p className="text-xs font-medium text-slate-500">Recuperando catálogo de candidatos...</p>
             </div>
-          ) : filteredEmpresas.length === 0 ? (
+          ) : filteredTalentos.length === 0 ? (
             <div className="p-16 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl text-center space-y-3">
               <Database className="w-10 h-10 text-slate-400 mx-auto animate-bounce" />
-              <h3 className="font-bold text-slate-950 dark:text-slate-50">No se encontraron convenios</h3>
+              <h3 className="font-bold text-slate-950 dark:text-slate-50">No se encontraron perfiles</h3>
               <p className="text-xs text-slate-500 max-w-xs mx-auto leading-relaxed">
-                Ninguna empresa con convenio municipal coincide con la búsqueda en este momento.
+                Ningún currículum ciego validado coincide con los filtros o competencias buscadas en este momento.
               </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredEmpresas.map((emp) => (
-                <EmpresaCard key={emp.id} empresa={emp} />
+              {filteredTalentos.map((tal) => (
+                <TalentCard key={tal.id} {...tal} />
               ))}
             </div>
           )}

@@ -39,12 +39,12 @@ export default function Hero() {
                 Inscribir Mi Perfil (Talentos)
               </Button>
             </Link>
-            <Link href="/empresas">
+            <Link href="/talentos">
               <Button
                 variant="outline"
                 className="w-full sm:w-auto border-slate-700 bg-transparent hover:border-slate-500 text-slate-300 hover:text-white font-extrabold px-8 py-6 rounded-2xl hover:bg-slate-800/50 hover:scale-105 transition-all text-base duration-300"
               >
-                Portal Corporativo (Empresas)
+                Vitrina de Talentos (Empresas)
               </Button>
             </Link>
           </div>
