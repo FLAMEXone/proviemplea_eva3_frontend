@@ -9,56 +9,27 @@ import Footer from "@/components/Footer";
 
 import { TalentCard } from "@/components/TalentCard";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
-import { Sparkles } from "lucide-react";
-
-// Mock de candidatos basado exactamente en la estructura de la base de datos de Laravel
-const MOCK_TALENTOS = [
-  {
-    id: "d9e83162-bbbe-426b-9c3f-ecb6613ccf68",
-    codigo_talento: "TAL-2026-001",
-    resumen: "Desarrollador Full Stack con sólida experiencia en Laravel y React. Especializado en desarrollo de APIs REST, optimización de consultas SQL y despliegue de microservicios en AWS. Altamente proactivo y enfocado en código limpio.",
-    titulo_carrera: "Ingeniero Civil en Informática",
-    nivel_educacional: "Universitario Graduado",
-    anios_experiencia: 5,
-    competencias: ["Laravel", "React", "PostgreSQL", "AWS", "Docker"],
-    rango_renta: "$1.800.000 - $2.200.000 CLP",
-    tipo_jornada: "Completa",
-    modalidad: "Remoto",
-    validado: true,
-    persona_discapacidad: false,
-  },
-  {
-    id: "3c3ef271-e94d-4da4-8b1e-7b77ab6ef1e2",
-    codigo_talento: "TAL-2026-002",
-    resumen: "Administrativa bilingüe con experiencia en gestión de oficina, atención al cliente y soporte contable. Dominio de herramientas ofimáticas avanzadas (Excel, Notion) y sistemas ERP (SAP). Alta capacidad organizativa y orientación a resultados.",
-    titulo_carrera: "Técnico en Administración de Empresas",
-    nivel_educacional: "Técnico Profesional Completo",
-    anios_experiencia: 3,
-    competencias: ["SAP ERP", "Excel Avanzado", "Gestión de Agenda", "Inglés B2", "Facturación"],
-    rango_renta: "$800.000 - $1.000.000 CLP",
-    tipo_jornada: "Completa",
-    modalidad: "Presencial",
-    validado: true,
-    persona_discapacidad: true, // Incluida bajo ley de inclusión 21015
-  },
-  {
-    id: "6f5cf9e1-ca6c-4876-b9b5-c08ef1284d12",
-    codigo_talento: "TAL-2026-003",
-    resumen: "Diseñadora UX/UI apasionada por crear interfaces digitales accesibles y centradas en el usuario. Experiencia en metodologías de diseño (Design Thinking), desarrollo de prototipos interactivos en Figma y pruebas de usabilidad con usuarios reales.",
-    titulo_carrera: "Diseñadora Gráfica Mención Multimedia",
-    nivel_educacional: "Universitario Graduado",
-    anios_experiencia: 2,
-    competencias: ["Figma", "UI Design", "Design Thinking", "HTML/CSS", "Wireframing"],
-    rango_renta: "$1.100.000 - $1.300.000 CLP",
-    tipo_jornada: "Completa",
-    modalidad: "Híbrido",
-    validado: false, // Perfil recién registrado, aún no validado por el administrador
-    persona_discapacidad: false,
-  }
-];
+import { Sparkles, Loader2, Database, AlertCircle } from "lucide-react";
+import { getTalentos, getEstadisticas } from "@/lib/infrastructure/api";
+import { type Persona } from "@/lib/interfaces/persona.interface";
+import { type Estadisticas } from "@/lib/interfaces/estadisticas.interface";
 
 export default function Home() {
   const [theme, setTheme] = React.useState<"light" | "dark" | null>(null);
+  
+  // Estados para API dinámicos
+  const [talentos, setTalentos] = React.useState<Persona[]>([]);
+  const [stats, setStats] = React.useState<Estadisticas>({
+    total_personas: 0,
+    personas_validadas: 0,
+    total_empresas: 0,
+    empresas_validadas: 0,
+    contactos_pendientes: 0,
+    contactos_en_proceso: 0,
+    contactos_exitosos: 0
+  });
+  const [loading, setLoading] = React.useState(true);
+  const [apiError, setApiError] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
@@ -71,6 +42,34 @@ export default function Home() {
     } else {
       document.documentElement.classList.remove("dark");
     }
+  }, []);
+
+  // Consumo dinámico de API
+  React.useEffect(() => {
+    async function loadApiData() {
+      try {
+        setApiError(false);
+        const [fetchedTalentos, fetchedStats] = await Promise.all([
+          getTalentos({ validado: true }),
+          getEstadisticas()
+        ]);
+
+        if (fetchedTalentos) {
+          setTalentos(fetchedTalentos);
+        }
+
+        if (fetchedStats) {
+          setStats(fetchedStats);
+        }
+      } catch (err) {
+        console.error("Error al conectar con la API de Laravel:", err);
+        setApiError(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadApiData();
   }, []);
 
   const toggleTheme = () => {
@@ -88,14 +87,34 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 transition-colors duration-300">
-      {/* Navbar con control de Dark Mode incorporado */}
       <Navbar theme={theme} toggleTheme={toggleTheme} />
       
       <Hero />
-      
+      <section className="bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-900 py-10 sm:py-14 w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+            <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/50 p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-all duration-300">
+              <span className="block text-4xl font-extrabold text-blue-600 dark:text-blue-400">{stats.personas_validadas}</span>
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2 block uppercase tracking-wider">Talentos Validados</span>
+            </div>
+            <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/50 p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-all duration-300">
+              <span className="block text-4xl font-extrabold text-teal-600 dark:text-teal-400">{stats.total_empresas}</span>
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2 block uppercase tracking-wider">Empresas Registradas</span>
+            </div>
+            <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/50 p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-all duration-300">
+              <span className="block text-4xl font-extrabold text-emerald-600 dark:text-emerald-400">{stats.contactos_exitosos}</span>
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2 block uppercase tracking-wider">Vinculaciones Exitosas</span>
+            </div>
+            <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/50 p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-all duration-300">
+              <span className="block text-4xl font-extrabold text-amber-600 dark:text-amber-400">{stats.contactos_en_proceso}</span>
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2 block uppercase tracking-wider">En Intermediación</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <About />
       
-      {/* 🔮 Vitrina de Talentos Real (Hito 1 integrado) */}
       <section id="talentos" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 w-full">
         <div className="mb-12 text-center sm:text-left flex flex-col gap-4">
           <div className="inline-flex self-center sm:self-start items-center gap-2 rounded-full bg-blue-100 dark:bg-blue-900/30 px-3 py-1 text-xs font-bold tracking-wide text-blue-700 dark:text-blue-400 uppercase">
@@ -110,15 +129,36 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Grid de Tarjetas Reales del Hito 1 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {MOCK_TALENTOS.map((talento) => (
-            <TalentCard key={talento.id} {...talento} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20 gap-3">
+            <Loader2 className="w-10 h-10 animate-spin text-blue-600 dark:text-blue-400" />
+            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Consultando perfiles municipales validados...</p>
+          </div>
+        ) : apiError ? (
+          <div className="mx-auto max-w-md p-6 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/50 rounded-2xl text-center flex flex-col items-center gap-3">
+            <AlertCircle className="w-8 h-8 text-red-600 dark:text-red-400" />
+            <h3 className="font-bold text-slate-900 dark:text-red-200 text-base">Error de conexión municipal</h3>
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              No pudimos conectar con el servidor de empleo de Providencia para obtener los perfiles reales. Por favor, verifica que la API y la base de datos estén activas.
+            </p>
+          </div>
+        ) : talentos.length === 0 ? (
+          <div className="mx-auto max-w-md p-6 bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 rounded-2xl text-center flex flex-col items-center gap-3">
+            <Database className="w-8 h-8 text-slate-400 dark:text-slate-500" />
+            <h3 className="font-bold text-slate-900 dark:text-slate-100 text-base">Vitrina actualmente vacía</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              No hay currículums ciegos aprobados y validados para publicación en este momento. Los nuevos perfiles aparecerán una vez visados por el Administrador.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {talentos.map((talento) => (
+              <TalentCard key={talento.id} {...talento} />
+            ))}
+          </div>
+        )}
       </section>
 
-      {/* ✍️ Testimonios de Inclusión Laboral Real (Hito 1 integrado) */}
       <section id="testimonios" className="bg-slate-100/50 dark:bg-slate-900/30 border-y border-slate-200/50 dark:border-slate-800/80 py-20 sm:py-28 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center flex flex-col gap-4 mb-12">
@@ -133,7 +173,6 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Carrusel de Testimonios Accesible */}
           <TestimonialsCarousel />
         </div>
       </section>
