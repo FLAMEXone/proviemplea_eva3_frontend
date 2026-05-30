@@ -81,10 +81,15 @@ export function TalentCard({
 
           {/* Badges de Estado */}
           <div className="flex flex-col gap-1.5 items-end">
-            {validado && (
+            {validado ? (
               <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 gap-1 text-[10px] font-medium shadow-none hover:bg-emerald-50 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900/50">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                 Validado
+              </Badge>
+            ) : (
+              <Badge className="bg-amber-50 text-amber-700 border-amber-200 gap-1 text-[10px] font-medium shadow-none hover:bg-amber-50 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-900/50">
+                <Clock className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                Pendiente
               </Badge>
             )}
             {persona_discapacidad && (

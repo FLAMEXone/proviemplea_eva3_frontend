@@ -2,6 +2,8 @@ import { ENivelEducacional, ETipoJornada, EModalidad } from "../enums/personas.e
 
 export interface IPersona {
   id: string;
+  email: string;
+  telefono?: string | null;
   codigo_talento: string;
   resumen?: string | null;
   nivel_educacional?: ENivelEducacional | null;
@@ -20,3 +22,4 @@ export interface IPersona {
   validado: boolean;
   activo: boolean;
 }
+

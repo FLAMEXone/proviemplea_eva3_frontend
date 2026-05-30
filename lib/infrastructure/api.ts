@@ -106,3 +106,15 @@ export async function crearEmpresa(data: Partial<IEmpresa>): Promise<IEmpresa> {
     body: JSON.stringify(data),
   });
 }
+
+/**
+ * Registrar un nuevo talento (Persona) en el sistema.
+ * POST /api/personas
+ */
+export async function crearTalento(data: Partial<IPersona>): Promise<IPersona> {
+  return fetchApi<IPersona>("/personas", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+

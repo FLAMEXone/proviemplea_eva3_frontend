@@ -4,27 +4,82 @@ import * as React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { 
-  Building2, 
   Loader2, 
   Search,
-  Building,
-  Info
+  Info,
+  Sparkles,
+  Database
 } from "lucide-react";
-import { getEmpresas, crearEmpresa } from "@/lib/infrastructure/api";
+import { getEmpresas, crearEmpresa, getTalentos } from "@/lib/infrastructure/api";
 import { IEmpresa } from "@/lib/domain/interfaces/empresa.interface";
+import { IPersona } from "@/lib/domain/interfaces/persona.interface";
 import { ETipoEmpresa } from "@/lib/domain/enums/empresa.enum";
 import { validarRutChileno } from "@/lib/utils";
 
 // Componentes modulares
 import EmpresaHeader from "@/components/empresas/EmpresaHeader";
-import EmpresaCard from "@/components/empresas/EmpresaCard";
 import EmpresaForm from "@/components/empresas/EmpresaForm";
+import EmpresasDirectory from "@/components/empresas/EmpresasDirectory";
+import { TalentCard } from "@/components/TalentCard";
+
+function isTalentoCompleto(talento: IPersona): boolean {
+  const email = talento.email?.trim();
+  const telefono = talento.telefono?.trim();
+  const resumen = talento.resumen?.trim();
+  const nivel = talento.nivel_educacional;
+  const titulo = talento.titulo_carrera?.trim();
+  const anio = talento.anio_egreso;
+  const aniosExp = talento.anios_experiencia;
+  const renta = talento.rango_renta?.trim();
+  const jornada = talento.tipo_jornada;
+  const modalidad = talento.modalidad;
+  const portafolio = talento.portafolio_url?.trim();
+
+  // Competencias (array o string no vacío)
+  const comps = Array.isArray(talento.competencias)
+    ? talento.competencias.length > 0
+    : !!(talento.competencias as any)?.trim();
+
+  // Áreas (array o string no vacío)
+  const areas = Array.isArray(talento.areas_experiencia)
+    ? talento.areas_experiencia.length > 0
+    : !!(talento.areas_experiencia as any)?.trim();
+
+  // Cursos (array o string no vacío)
+  const cursos = Array.isArray(talento.cursos)
+    ? talento.cursos.length > 0
+    : !!(talento.cursos as any)?.trim();
+
+  // Idiomas (array o string no vacío)
+  const idiomas = Array.isArray(talento.idiomas)
+    ? talento.idiomas.length > 0
+    : !!(talento.idiomas as any)?.trim();
+
+  return !!(
+    email &&
+    telefono &&
+    resumen &&
+    nivel &&
+    titulo &&
+    anio !== null && anio !== undefined &&
+    aniosExp !== null && aniosExp !== undefined &&
+    renta &&
+    jornada &&
+    modalidad &&
+    portafolio &&
+    comps &&
+    areas &&
+    cursos &&
+    idiomas
+  );
+}
 
 export default function EmpresasPage() {
   const [theme, setTheme] = React.useState<"light" | "dark" | null>(null);
 
   // Estados de datos
   const [empresas, setEmpresas] = React.useState<IEmpresa[]>([]);
+  const [talentos, setTalentos] = React.useState<IPersona[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [isDemoMode, setIsDemoMode] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -137,17 +192,24 @@ export default function EmpresasPage() {
     }
   };
 
-  // Carga inicial de empresas
+  // Carga inicial de datos (Empresas y Talentos)
   React.useEffect(() => {
     async function loadData() {
       try {
-        const fetchedEmpresas = await getEmpresas();
+        const [fetchedEmpresas, fetchedTalentos] = await Promise.all([
+          getEmpresas(),
+          getTalentos()
+        ]);
         setEmpresas(fetchedEmpresas);
+        setTalentos(fetchedTalentos);
       } catch (err) {
-        console.warn("Laravel API offline al cargar convenios, activando Modo Demostración:", err);
+        console.warn("Laravel API offline, activando Modo Demostración:", err);
         setIsDemoMode(true);
+        
         const { MOCK_EMPRESAS } = await import("@/lib/infrastructure/mocks/empresa.mock");
+        const { MOCK_TALENTOS } = await import("@/lib/infrastructure/mocks/personas.mock");
         setEmpresas(MOCK_EMPRESAS);
+        setTalentos(MOCK_TALENTOS);
       } finally {
         setLoading(false);
       }
@@ -200,7 +262,6 @@ export default function EmpresasPage() {
 
     // 1. Honeypot check
     if (formData.bot_trap) {
-      console.warn("Bot detectado en Honeypot.");
       setSubmitting(true);
       setTimeout(() => {
         setSubmitSuccess(true);
@@ -302,11 +363,15 @@ export default function EmpresasPage() {
     }
   };
 
-  // Filtrado de empresas por búsqueda
-  const filteredEmpresas = empresas.filter(emp => 
-    emp.nombre_empresa.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    emp.rubro?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    emp.rut_empresa.toLowerCase().includes(searchQuery.toLowerCase())
+  // Filtrado de talentos por búsqueda reactiva
+  const filteredTalentos = talentos.map(tal => ({
+    ...tal,
+    validado: isDemoMode ? isTalentoCompleto(tal) : !!tal.validado
+  })).filter(tal => 
+    tal.titulo_carrera?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    tal.codigo_talento.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (Array.isArray(tal.competencias) && tal.competencias.some(c => c.toLowerCase().includes(searchQuery.toLowerCase()))) ||
+    (typeof tal.competencias === "string" && tal.competencias.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (
@@ -326,7 +391,7 @@ export default function EmpresasPage() {
                 Modo Demostración Activo
               </h4>
               <p className="text-amber-700 dark:text-slate-300 mt-0.5 leading-relaxed">
-                No detectamos conexión activa con el servidor de Laravel. En este modo puedes buscar empresas mockeadas y completar el formulario de convenio; el sistema simulará el guardado e inyectará reactivamente la nueva empresa al listado visible.
+                No detectamos conexión activa con el servidor de Laravel. En este modo puedes buscar candidatos mockeados y completar el formulario de convenio; el sistema simulará el guardado de forma interactiva.
               </p>
             </div>
           </div>
@@ -336,16 +401,16 @@ export default function EmpresasPage() {
       {/* Contenido Principal */}
       <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
         
-        {/* Columna Directorio de Empresas (7 columnas) */}
-        <div className="lg:col-span-7 space-y-6">
+        {/* Columna Vitrina Corporativa de Talentos (7 columnas) */}
+        <div id="talentos" className="lg:col-span-7 space-y-6 scroll-mt-20">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h2 className="text-xl font-black text-slate-900 dark:text-slate-100 flex items-center gap-2 tracking-tight">
-                <Building className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                Directorio Corporativo Activo
+                <Sparkles className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                Vitrina Corporativa de Talentos
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Organizaciones aliadas autorizadas por el Administrador.
+                Currículums Ciegos autorizados para intermediación laboral.
               </p>
             </div>
             {/* Buscador */}
@@ -357,7 +422,7 @@ export default function EmpresasPage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar por rubro o nombre..."
+                placeholder="Buscar por rubro, código o competencias..."
                 className="block w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
               />
             </div>
@@ -366,40 +431,44 @@ export default function EmpresasPage() {
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20 gap-3">
               <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
-              <p className="text-xs font-medium text-slate-500">Recuperando catálogo de empresas...</p>
+              <p className="text-xs font-medium text-slate-500">Recuperando catálogo de candidatos...</p>
             </div>
-          ) : filteredEmpresas.length === 0 ? (
+          ) : filteredTalentos.length === 0 ? (
             <div className="p-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl text-center space-y-3">
-              <Building2 className="w-10 h-10 text-slate-400 mx-auto" />
-              <h3 className="font-bold text-slate-950 dark:text-slate-50">No se encontraron empresas</h3>
+              <Database className="w-10 h-10 text-slate-400 mx-auto" />
+              <h3 className="font-bold text-slate-950 dark:text-slate-50">No se encontraron perfiles</h3>
               <p className="text-xs text-slate-500 max-w-xs mx-auto leading-relaxed">
-                Ninguna empresa en convenio coincide con la búsqueda o el directorio se encuentra vacío en este momento.
+                Ningún currículum ciego validado coincide con los filtros o competencias buscadas en este momento.
               </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filteredEmpresas.map((emp) => (
-                <EmpresaCard key={emp.id} empresa={emp} />
+              {filteredTalentos.map((tal) => (
+                <TalentCard key={tal.id} {...tal} />
               ))}
             </div>
           )}
         </div>
 
-        {/* Columna Formulario de Registro (5 columnas) */}
-        <EmpresaForm
-          formData={formData}
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
-          submitting={submitting}
-          submitSuccess={submitSuccess}
-          setSubmitSuccess={setSubmitSuccess}
-          errorMessage={errorMessage}
-          validationErrors={validationErrors}
-          liveErrors={liveErrors}
-          touched={touched}
-          setTouched={setTouched}
-          setFormData={setFormData}
-        />
+        {/* Columna Formulario de Registro y Directorio (5 columnas) */}
+        <div className="lg:col-span-5 space-y-6">
+          <EmpresaForm
+            formData={formData}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+            submitting={submitting}
+            submitSuccess={submitSuccess}
+            setSubmitSuccess={setSubmitSuccess}
+            errorMessage={errorMessage}
+            validationErrors={validationErrors}
+            liveErrors={liveErrors}
+            touched={touched}
+            setTouched={setTouched}
+            setFormData={setFormData}
+          />
+          
+          <EmpresasDirectory empresas={empresas} />
+        </div>
 
       </main>
 

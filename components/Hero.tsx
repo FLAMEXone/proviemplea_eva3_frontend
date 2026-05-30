@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -33,22 +34,23 @@ export default function Hero() {
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center sm:justify-start pt-4">
-            <a href="#talentos">
+            <Link href="/registro-talento">
               <Button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-extrabold px-8 py-6 rounded-2xl shadow-lg shadow-blue-500/20 hover:scale-105 transition-all text-base duration-300">
-                Ver Vitrina de Talentos
+                Inscribir Mi Perfil (Talentos)
               </Button>
-            </a>
-            <a href="#nosotros">
+            </Link>
+            <Link href="/empresas">
               <Button
                 variant="outline"
                 className="w-full sm:w-auto border-slate-700 bg-transparent hover:border-slate-500 text-slate-300 hover:text-white font-extrabold px-8 py-6 rounded-2xl hover:bg-slate-800/50 hover:scale-105 transition-all text-base duration-300"
               >
-                Conocer Más
+                Portal Corporativo (Empresas)
               </Button>
-            </a>
+            </Link>
           </div>
         </div>
       </div>
     </section>
   );
 }
+

@@ -15,16 +15,17 @@ export default function Navbar({ theme, toggleTheme }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
+  const isHome = pathname === "/";
   const isEmpresasRoute = pathname === "/empresas";
   const buttonText = isEmpresasRoute ? "Para Talentos" : "Para Empresas";
   const buttonHref = isEmpresasRoute ? "/" : "/empresas";
 
   const navLinks = [
-    { name: "Inicio", href: isEmpresasRoute ? "/" : "#inicio" },
-    { name: "Nosotros", href: isEmpresasRoute ? "/#nosotros" : "#nosotros" },
-    { name: "Talentos", href: isEmpresasRoute ? "/#talentos" : "#talentos" },
-    { name: "Testimonios", href: isEmpresasRoute ? "/#testimonios" : "#testimonios" },
-    { name: "FAQs", href: isEmpresasRoute ? "/#faqs" : "#faqs" },
+    { name: "Inicio", href: isHome ? "#inicio" : "/#inicio" },
+    { name: "Nosotros", href: isHome ? "#nosotros" : "/#nosotros" },
+    { name: "Talentos", href: isEmpresasRoute ? "#talentos" : "/empresas" },
+    { name: "Testimonios", href: isHome ? "#testimonios" : "/#testimonios" },
+    { name: "FAQs", href: isHome ? "#faqs" : "/#faqs" },
   ];
 
   return (

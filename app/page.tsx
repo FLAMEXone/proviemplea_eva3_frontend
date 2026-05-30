@@ -7,18 +7,15 @@ import About from "@/components/About";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
 
-import { TalentCard } from "@/components/TalentCard";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
-import { Sparkles, Loader2, Database, AlertCircle, X } from "lucide-react";
-import { getTalentos, getEstadisticas } from "@/lib/infrastructure/api";
-import { IPersona } from "@/lib/domain/interfaces/persona.interface";
+import { Sparkles, Loader2, AlertCircle, X } from "lucide-react";
+import { getEstadisticas } from "@/lib/infrastructure/api";
 import { IEstadisticas } from "@/lib/domain/interfaces/estadisticas.interface";
 
 export default function Home() {
   const [theme, setTheme] = React.useState<"light" | "dark" | null>(null);
   
-  // Estados para API dinámicos
-  const [talentos, setTalentos] = React.useState<IPersona[]>([]);
+  // Estados para estadísticas consolidadas
   const [stats, setStats] = React.useState<IEstadisticas>({
     total_personas: 0,
     personas_validadas: 0,
@@ -29,7 +26,6 @@ export default function Home() {
     contactos_exitosos: 0
   });
   const [loading, setLoading] = React.useState(true);
-  
   const [showMockToast, setShowMockToast] = React.useState(false);
 
   React.useEffect(() => {
@@ -48,24 +44,13 @@ export default function Home() {
   React.useEffect(() => {
     async function loadApiData() {
       try {
-        const [fetchedTalentos, fetchedStats] = await Promise.all([
-          getTalentos({ validado: true }),
-          getEstadisticas()
-        ]);
-
-        if (fetchedTalentos) {
-          setTalentos(fetchedTalentos);
-        }
-
+        const fetchedStats = await getEstadisticas();
         if (fetchedStats) {
           setStats(fetchedStats);
         }
       } catch (err) {
-        console.warn("Laravel API offline, cargando fallbacks y activando Modo Demostración:", err);
-        
-        const { MOCK_TALENTOS } = await import("@/lib/infrastructure/mocks/personas.mock");
+        console.warn("Laravel API offline al cargar estadísticas, activando Modo Demostración:", err);
         const { MOCK_ESTADISTICAS } = await import("@/lib/infrastructure/mocks/estadisticas.mock");
-        setTalentos(MOCK_TALENTOS.filter(t => t.validado));
         setStats(MOCK_ESTADISTICAS);
         setShowMockToast(true);
       } finally {
@@ -95,67 +80,39 @@ export default function Home() {
       
       <Hero />
       
-      <section className="bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-900 py-10 sm:py-14 w-full">
+      {/* Sección de Estadísticas Consolidadas */}
+      <section className="bg-white dark:bg-slate-955 border-b border-slate-100 dark:border-slate-900 py-10 sm:py-14 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
-            <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/50 p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-all duration-300">
-              <span className="block text-4xl font-extrabold text-blue-600 dark:text-blue-400">{stats.personas_validadas}</span>
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2 block uppercase tracking-wider">Talentos Validados</span>
+          {loading ? (
+            <div className="flex justify-center items-center py-4 gap-2">
+              <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
+              <span className="text-xs font-semibold text-slate-400">Actualizando cifras de empleo municipal...</span>
             </div>
-            <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/50 p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-all duration-300">
-              <span className="block text-4xl font-extrabold text-teal-600 dark:text-teal-400">{stats.total_empresas}</span>
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2 block uppercase tracking-wider">Empresas Registradas</span>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8 animate-in fade-in duration-300">
+              <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/50 p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-all duration-300">
+                <span className="block text-4xl font-extrabold text-blue-600 dark:text-blue-400">{stats.personas_validadas}</span>
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2 block uppercase tracking-wider">Talentos Validados</span>
+              </div>
+              <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/50 p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-all duration-300">
+                <span className="block text-4xl font-extrabold text-teal-600 dark:text-teal-400">{stats.total_empresas}</span>
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2 block uppercase tracking-wider">Empresas Registradas</span>
+              </div>
+              <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/50 p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-all duration-300">
+                <span className="block text-4xl font-extrabold text-emerald-600 dark:text-emerald-400">{stats.contactos_exitosos}</span>
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2 block uppercase tracking-wider">Vinculaciones Exitosas</span>
+              </div>
+              <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/50 p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-all duration-300">
+                <span className="block text-4xl font-extrabold text-amber-600 dark:text-amber-400">{stats.contactos_en_proceso}</span>
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2 block uppercase tracking-wider">En Intermediación</span>
+              </div>
             </div>
-            <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/50 p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-all duration-300">
-              <span className="block text-4xl font-extrabold text-emerald-600 dark:text-emerald-400">{stats.contactos_exitosos}</span>
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2 block uppercase tracking-wider">Vinculaciones Exitosas</span>
-            </div>
-            <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/50 p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-all duration-300">
-              <span className="block text-4xl font-extrabold text-amber-600 dark:text-amber-400">{stats.contactos_en_proceso}</span>
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2 block uppercase tracking-wider">En Intermediación</span>
-            </div>
-          </div>
+          )}
         </div>
       </section>
 
       <About />
       
-      <section id="talentos" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 w-full">
-        <div className="mb-12 text-center sm:text-left flex flex-col gap-4">
-          <div className="inline-flex self-center sm:self-start items-center gap-2 rounded-full bg-blue-100 dark:bg-blue-900/30 px-3 py-1 text-xs font-bold tracking-wide text-blue-700 dark:text-blue-400 uppercase">
-            <Sparkles className="w-4 h-4" />
-            Vitrina de Talentos Disponibles
-          </div>
-          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">
-            Currículums Ciegos Validados
-          </h2>
-          <p className="text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed">
-            Explora los perfiles profesionales de vecinas y vecinos de Providencia. Puedes solicitar intermediación laboral al equipo municipal directamente desde cada perfil.
-          </p>
-        </div>
-
-        {loading ? (
-          <div className="flex flex-col items-center justify-center py-20 gap-3">
-            <Loader2 className="w-10 h-10 animate-spin text-blue-600 dark:text-blue-400" />
-            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Consultando perfiles municipales validados...</p>
-          </div>
-        ) : talentos.length === 0 ? (
-          <div className="mx-auto max-w-md p-6 bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 rounded-2xl text-center flex flex-col items-center gap-3">
-            <Database className="w-8 h-8 text-slate-400 dark:text-slate-500" />
-            <h3 className="font-bold text-slate-900 dark:text-slate-100 text-base">Vitrina actualmente vacía</h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              No hay currículums ciegos aprobados y validados para publicación en este momento. Los nuevos perfiles aparecerán una vez visados por el Administrador.
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {talentos.map((talento) => (
-              <TalentCard key={talento.id} {...talento} />
-            ))}
-          </div>
-        )}
-      </section>
-
       <section id="testimonios" className="bg-slate-100/50 dark:bg-slate-900/30 border-y border-slate-200/50 dark:border-slate-800/80 py-20 sm:py-28 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center flex flex-col gap-4 mb-12">
@@ -187,7 +144,7 @@ export default function Home() {
               Modo Demostración Activo
             </h4>
             <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed">
-              No se detectó conexión con la base de datos municipal. Visualizando perfiles locales simulados.
+              No se detectó conexión con la base de datos municipal. Visualizando estadísticas locales simuladas.
             </p>
           </div>
           <button

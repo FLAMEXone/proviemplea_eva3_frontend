@@ -10,6 +10,7 @@ export enum ETipoJornada {
   COMPLETA = "completa",
   PART_TIME = "part-time",
   POR_HORAS = "por-horas",
+  FLEXIBLE = "flexible",
 }
 
 export enum EModalidad {
