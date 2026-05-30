@@ -9,7 +9,7 @@ import Footer from "@/components/Footer";
 
 import { TalentCard } from "@/components/TalentCard";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
-import { Sparkles, Loader2, Database, AlertCircle } from "lucide-react";
+import { Sparkles, Loader2, Database, AlertCircle, X } from "lucide-react";
 import { getTalentos, getEstadisticas } from "@/lib/infrastructure/api";
 import { type Persona } from "@/lib/interfaces/persona.interface";
 import { type Estadisticas } from "@/lib/interfaces/estadisticas.interface";
@@ -29,7 +29,8 @@ export default function Home() {
     contactos_exitosos: 0
   });
   const [loading, setLoading] = React.useState(true);
-  const [apiError, setApiError] = React.useState<boolean>(false);
+  
+  const [showMockToast, setShowMockToast] = React.useState(false);
 
   React.useEffect(() => {
     const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
@@ -44,11 +45,9 @@ export default function Home() {
     }
   }, []);
 
-  // Consumo dinámico de API
   React.useEffect(() => {
     async function loadApiData() {
       try {
-        setApiError(false);
         const [fetchedTalentos, fetchedStats] = await Promise.all([
           getTalentos({ validado: true }),
           getEstadisticas()
@@ -62,8 +61,12 @@ export default function Home() {
           setStats(fetchedStats);
         }
       } catch (err) {
-        console.error("Error al conectar con la API de Laravel:", err);
-        setApiError(true);
+        console.warn("Laravel API offline, cargando fallbacks y activando Modo Demostración:", err);
+        
+        const { MOCK_TALENTOS, MOCK_ESTADISTICAS } = await import("@/lib/infrastructure/mockData");
+        setTalentos(MOCK_TALENTOS.filter(t => t.validado));
+        setStats(MOCK_ESTADISTICAS);
+        setShowMockToast(true);
       } finally {
         setLoading(false);
       }
@@ -90,6 +93,7 @@ export default function Home() {
       <Navbar theme={theme} toggleTheme={toggleTheme} />
       
       <Hero />
+      
       <section className="bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-900 py-10 sm:py-14 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
@@ -134,14 +138,6 @@ export default function Home() {
             <Loader2 className="w-10 h-10 animate-spin text-blue-600 dark:text-blue-400" />
             <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Consultando perfiles municipales validados...</p>
           </div>
-        ) : apiError ? (
-          <div className="mx-auto max-w-md p-6 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/50 rounded-2xl text-center flex flex-col items-center gap-3">
-            <AlertCircle className="w-8 h-8 text-red-600 dark:text-red-400" />
-            <h3 className="font-bold text-slate-900 dark:text-red-200 text-base">Error de conexión municipal</h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              No pudimos conectar con el servidor de empleo de Providencia para obtener los perfiles reales. Por favor, verifica que la API y la base de datos estén activas.
-            </p>
-          </div>
         ) : talentos.length === 0 ? (
           <div className="mx-auto max-w-md p-6 bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 rounded-2xl text-center flex flex-col items-center gap-3">
             <Database className="w-8 h-8 text-slate-400 dark:text-slate-500" />
@@ -179,6 +175,29 @@ export default function Home() {
 
       <FAQ />
       <Footer />
+
+      {showMockToast && (
+        <div className="fixed bottom-5 right-5 z-50 flex max-w-sm items-center gap-3 rounded-2xl border border-amber-200/50 bg-amber-50/95 p-4 shadow-xl backdrop-blur-md dark:border-amber-900/30 dark:bg-amber-950/95 text-slate-800 dark:text-slate-100 transition-all duration-500 animate-in slide-in-from-bottom-5">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 dark:bg-amber-500/20">
+            <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+          </div>
+          <div className="flex-grow">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400">
+              Modo Demostración Activo
+            </h4>
+            <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed">
+              No se detectó conexión con la base de datos municipal. Visualizando perfiles locales simulados.
+            </p>
+          </div>
+          <button
+            onClick={() => setShowMockToast(false)}
+            className="rounded-lg p-1.5 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 text-slate-400 hover:text-slate-600 transition-all"
+            aria-label="Cerrar notificación"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
