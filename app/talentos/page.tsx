@@ -13,6 +13,7 @@ import {
 import { getTalentos } from "@/lib/infrastructure/api";
 import { IPersona } from "@/lib/domain/interfaces/persona.interface";
 import { TalentCard } from "@/components/TalentCard";
+import { CustomBadge } from "@/components/custom/CustomBadge";
 
 function isTalentoCompleto(talento: IPersona): boolean {
   const email = talento.email?.trim();
@@ -140,10 +141,12 @@ export default function TalentosPage() {
       <div className="relative overflow-hidden bg-slate-900 text-white py-12 dark:bg-black/40">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/30 to-indigo-600/30 opacity-40" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-full text-xs font-bold uppercase tracking-wider mb-4 animate-pulse">
-            <Sparkles className="w-3.5 h-3.5" />
-            Vitrina de Talentos
-          </div>
+          <CustomBadge 
+            color="glass-blue" 
+            size="md" 
+            text="Vitrina de Talentos" 
+            className="uppercase tracking-wider mb-4"
+          />
           <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white leading-tight">
             Currículums Ciegos de Providencia
           </h1>

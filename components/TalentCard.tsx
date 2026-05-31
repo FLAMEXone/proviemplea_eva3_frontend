@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { CustomBadge } from "@/components/custom/CustomBadge";
 import { buttonVariants } from "@/components/ui/button";
 import { Briefcase, GraduationCap, DollarSign, Clock, ShieldCheck, HeartHandshake, EyeOff, Send } from "lucide-react";
 import Link from "next/link";
@@ -65,9 +66,12 @@ export function TalentCard({
               <span className="font-mono text-xs font-semibold tracking-wider text-slate-400 dark:text-slate-500">
                 CÓDIGO DE TALENTO
               </span>
-              <Badge variant="outline" className="font-mono text-xs text-primary bg-primary/10 border-primary/20 dark:text-primary dark:bg-primary/20 dark:border-primary/30">
-                {codigo_talento}
-              </Badge>
+              <CustomBadge 
+                color="primary" 
+                size="md" 
+                text={codigo_talento} 
+                className="font-mono"
+              />
             </div>
             {/* Título Profesional / Rol */}
             <CardTitle className="mt-2 text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
@@ -82,21 +86,12 @@ export function TalentCard({
           {/* Badges de Estado */}
           <div className="flex flex-col gap-1.5 items-end">
             {validado ? (
-              <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 gap-1 text-[10px] font-medium shadow-none hover:bg-emerald-50 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900/50">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                Validado
-              </Badge>
+              <CustomBadge color="emerald" size="sm" text="Validado" icon={<ShieldCheck className="w-3.5 h-3.5" />} />
             ) : (
-              <Badge className="bg-amber-50 text-amber-700 border-amber-200 gap-1 text-[10px] font-medium shadow-none hover:bg-amber-50 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-900/50">
-                <Clock className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                Pendiente
-              </Badge>
+              <CustomBadge color="amber" size="sm" text="Pendiente" icon={<Clock className="w-3.5 h-3.5" />} />
             )}
             {persona_discapacidad && (
-              <Badge className="bg-indigo-50 text-indigo-700 border-indigo-200 gap-1 text-[10px] font-medium shadow-none hover:bg-indigo-50 dark:bg-indigo-950/30 dark:text-indigo-400 dark:border-indigo-900/50">
-                <HeartHandshake className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                Inclusión L.21015
-              </Badge>
+              <CustomBadge color="indigo" size="sm" text="Inclusión L.21015" icon={<HeartHandshake className="w-3.5 h-3.5" />} />
             )}
           </div>
         </div>

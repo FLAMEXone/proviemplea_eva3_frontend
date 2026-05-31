@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Building, Building2, Search, ShieldCheck, User, Mail } from "lucide-react";
 import { IEmpresa } from "@/lib/domain/interfaces/empresa.interface";
+import { CustomBadge } from "@/components/custom/CustomBadge";
 
 interface EmpresasDirectoryProps {
   empresas: IEmpresa[];
@@ -62,10 +63,12 @@ export default function EmpresasDirectory({ empresas }: EmpresasDirectoryProps) 
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100/50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-400 text-xs font-black shrink-0">
                   {emp.nombre_empresa.substring(0, 2).toUpperCase()}
                 </div>
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[8px] font-bold text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400">
-                  <ShieldCheck className="w-2.5 h-2.5 text-emerald-600" />
-                  Activa
-                </span>
+                <CustomBadge 
+                  color="emerald" 
+                  size="sm" 
+                  text="Activa" 
+                  icon={<ShieldCheck className="w-2.5 h-2.5" />} 
+                />
               </div>
 
               <h5 className="text-xs font-bold text-slate-900 dark:text-slate-100 mt-2.5 leading-tight">

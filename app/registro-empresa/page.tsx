@@ -3,6 +3,7 @@
 import * as React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Info } from "lucide-react";
 import { getEmpresas, crearEmpresa } from "@/lib/infrastructure/api";
 import { IEmpresa } from "@/lib/domain/interfaces/empresa.interface";
 import { ETipoEmpresa } from "@/lib/domain/enums/empresa.enum";

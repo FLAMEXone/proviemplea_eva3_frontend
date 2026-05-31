@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { ArrowLeft, Building2 } from "lucide-react";
+import { CustomBadge } from "@/components/custom/CustomBadge";
 
 export default function EmpresaHeader() {
   return (
@@ -17,10 +18,13 @@ export default function EmpresaHeader() {
             Volver a la Vitrina de Talentos
           </Link>
         </div>
-        <div className="inline-flex items-center gap-2 rounded-full bg-blue-100 dark:bg-blue-900/30 px-3 py-1 text-xs font-bold tracking-wide text-blue-700 dark:text-blue-400 uppercase">
-          <Building2 className="w-3.5 h-3.5" />
-          Convenios de Empleo de Providencia
-        </div>
+        <CustomBadge 
+          color="blue" 
+          size="md" 
+          text="Convenios de Empleo de Providencia" 
+          icon={<Building2 className="w-3.5 h-3.5" />} 
+          className="uppercase tracking-wide"
+        />
         <h1 className="text-3xl font-extrabold text-slate-900 dark:text-slate-100 sm:text-4xl mt-3 tracking-tight">
           Portal Corporativo y Empresas Aliadas
         </h1>

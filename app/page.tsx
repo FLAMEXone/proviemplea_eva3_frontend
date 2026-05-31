@@ -8,7 +8,8 @@ import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
 
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
-import { Loader2, AlertCircle, X } from "lucide-react";
+import { Loader2, AlertCircle, X, MessageSquareQuote } from "lucide-react";
+import { CustomBadge } from "@/components/custom/CustomBadge";
 import { getEstadisticas } from "@/lib/infrastructure/api";
 import { IEstadisticas } from "@/lib/domain/interfaces/estadisticas.interface";
 
@@ -116,9 +117,13 @@ export default function Home() {
       <section id="testimonios" className="bg-slate-100/50 dark:bg-slate-900/30 border-y border-slate-200/50 dark:border-slate-800/80 py-20 sm:py-28 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center flex flex-col gap-4 mb-12">
-            <div className="inline-flex self-center items-center gap-2 rounded-full bg-emerald-100 dark:bg-emerald-950/40 px-3 py-1 text-xs font-bold tracking-wide text-emerald-700 dark:text-emerald-400 uppercase">
-              ✍️ Testimonios de Impacto
-            </div>
+            <CustomBadge 
+              color="emerald" 
+              size="md" 
+              text="Testimonios de Impacto" 
+              icon={<MessageSquareQuote className="w-3.5 h-3.5" />}
+              className="self-center uppercase tracking-wide"
+            />
             <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">
               ¿Qué dicen quienes nos usan?
             </h2>

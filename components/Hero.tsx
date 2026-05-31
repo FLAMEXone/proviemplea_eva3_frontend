@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { CustomBadge } from "@/components/custom/CustomBadge";
+import { Sparkles } from "lucide-react";
 
 export default function Hero() {
   return (
@@ -14,9 +16,12 @@ export default function Hero() {
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center sm:text-left">
         <div className="max-w-3xl flex flex-col gap-6">
           {/* Badge */}
-          <div className="inline-flex self-center sm:self-start items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-xs font-semibold tracking-wider text-blue-400 uppercase">
-            🌟 Innovación Municipal
-          </div>
+          <CustomBadge 
+            color="glass-blue" 
+            size="md" 
+            text="Innovación Municipal" 
+            className="self-center sm:self-start uppercase tracking-wider"
+          />
 
           {/* Heading */}
           <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl text-white">

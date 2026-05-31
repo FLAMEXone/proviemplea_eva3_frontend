@@ -3,6 +3,7 @@
 import * as React from "react";
 import { ShieldCheck, Info } from "lucide-react";
 import { IPersona } from "@/lib/domain/interfaces/persona.interface";
+import { CustomBadge } from "@/components/custom/CustomBadge";
 
 interface CandidatoConfidencialCardProps {
   talento: IPersona;
@@ -26,13 +27,18 @@ export default function CandidatoConfidencialCard({ talento }: CandidatoConfiden
         </h3>
         
         <div className="mt-4 flex flex-wrap gap-2">
-          <span className="font-mono text-xs font-bold text-primary bg-primary/10 border-primary/20 dark:text-primary dark:bg-primary/20 dark:border-primary/30 border px-2.5 py-1 rounded-full">
-            {talento.codigo_talento}
-          </span>
+          <CustomBadge 
+            color="primary" 
+            size="md" 
+            text={talento.codigo_talento} 
+            className="font-mono uppercase"
+          />
           {talento.persona_discapacidad && (
-            <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 border-indigo-200 border px-2.5 py-1 rounded-full dark:bg-indigo-950/30 dark:text-indigo-400 dark:border-indigo-900/50">
-              Ley Inclusión 21.015
-            </span>
+            <CustomBadge 
+              color="indigo" 
+              size="sm" 
+              text="Ley Inclusión 21.015" 
+            />
           )}
         </div>
 

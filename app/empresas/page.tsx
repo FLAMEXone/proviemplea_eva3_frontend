@@ -13,6 +13,7 @@ import {
 import { getEmpresas } from "@/lib/infrastructure/api";
 import { IEmpresa } from "@/lib/domain/interfaces/empresa.interface";
 import EmpresaCard from "@/components/empresas/EmpresaCard";
+import { CustomBadge } from "@/components/custom/CustomBadge";
 
 export default function EmpresasPage() {
   const [theme, setTheme] = React.useState<"light" | "dark" | null>(null);
@@ -84,10 +85,12 @@ export default function EmpresasPage() {
       <div className="relative overflow-hidden bg-slate-900 text-white py-12 dark:bg-black/40">
         <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/30 to-teal-600/30 opacity-40" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-xs font-bold uppercase tracking-wider mb-4 animate-pulse">
-            <Sparkles className="w-3.5 h-3.5" />
-            Convenios Vigentes
-          </div>
+          <CustomBadge 
+            color="glass-emerald" 
+            size="md" 
+            text="Convenios Vigentes" 
+            className="uppercase tracking-wider mb-4"
+          />
           <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white leading-tight">
             Directorio de Empresas Aliadas
           </h1>
