@@ -5,6 +5,7 @@ import { Menu, X, Sun, Moon, ChevronDown, User, Building } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
 interface NavbarProps {
   theme?: "light" | "dark" | null;
@@ -13,7 +14,6 @@ interface NavbarProps {
 
 export default function Navbar({ theme, toggleTheme }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const pathname = usePathname();
 
   const isHome = pathname === "/";
@@ -68,45 +68,48 @@ export default function Navbar({ theme, toggleTheme }: NavbarProps) {
               </button>
             )}
 
-            {/* Desplegable de Registro (Dropdown) */}
-            <div 
-              className="relative"
-              onMouseEnter={() => setIsDropdownOpen(true)}
-              onMouseLeave={() => setIsDropdownOpen(false)}
-            >
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all shadow-md shadow-blue-500/10 rounded-xl flex items-center gap-1.5 px-4 py-2 text-xs">
-                Registro
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`} />
-              </Button>
+            {/* Desplegable de Registro */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  className="group bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all shadow-md shadow-blue-500/10 rounded-xl flex items-center gap-1.5 px-4 py-2 text-xs cursor-pointer focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                >
+                  Registro
+                  <ChevronDown className="w-3.5 h-3.5 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                </Button>
+              </DropdownMenuTrigger>
 
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-1.5 w-52 rounded-2xl border border-slate-200/60 bg-white p-2 shadow-xl dark:border-slate-800/80 dark:bg-slate-950 animate-in fade-in slide-in-from-top-2 duration-150">
+              <DropdownMenuContent 
+                align="end" 
+                className="w-52 rounded-2xl border border-slate-200/60 bg-white p-2 shadow-xl dark:border-slate-800/80 dark:bg-slate-950 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
+              >
+                <DropdownMenuItem asChild>
                   <Link 
                     href="/registro-talento"
-                    onClick={() => setIsDropdownOpen(false)}
-                    className="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-left text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900 hover:text-blue-600 dark:hover:text-blue-400 transition-all"
+                    className="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-left text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer outline-none"
                   >
                     <User className="w-4 h-4 text-blue-600" />
                     <div>
-                      <span className="block">Soy Talento</span>
+                      <span className="block font-bold">Soy Talento</span>
                       <span className="block text-[9px] text-slate-400 font-normal mt-0.5">Inscribir CV Ciego</span>
                     </div>
                   </Link>
+                </DropdownMenuItem>
 
+                <DropdownMenuItem asChild>
                   <Link 
                     href="/registro-empresa"
-                    onClick={() => setIsDropdownOpen(false)}
-                    className="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-left text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900 hover:text-blue-600 dark:hover:text-blue-400 transition-all mt-1"
+                    className="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-left text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer mt-1 outline-none"
                   >
                     <Building className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                     <div>
-                      <span className="block">Soy Empresa</span>
+                      <span className="block font-bold">Soy Empresa</span>
                       <span className="block text-[9px] text-slate-400 font-normal mt-0.5">Firmar Convenio</span>
                     </div>
                   </Link>
-                </div>
-              )}
-            </div>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           {/* Mobile Menu Button */}
@@ -136,7 +139,7 @@ export default function Navbar({ theme, toggleTheme }: NavbarProps) {
             </a>
           ))}
 
-          {/* Mobile Toggle Theme & Register options */}
+          {/* Mobile Toggle Theme */}
           <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">Tema Visual</span>
@@ -153,29 +156,6 @@ export default function Navbar({ theme, toggleTheme }: NavbarProps) {
                   )}
                 </button>
               )}
-            </div>
-
-            {/* Opciones de Registro para móviles */}
-            <div className="grid grid-cols-2 gap-3 pt-1">
-              <Link 
-                href="/registro-talento" 
-                onClick={() => setIsOpen(false)}
-                className="flex flex-col items-center justify-center p-3 bg-blue-50/50 hover:bg-blue-50 dark:bg-blue-950/20 dark:hover:bg-blue-950/30 border border-blue-100 dark:border-blue-900/30 rounded-2xl text-center transition-all group"
-              >
-                <User className="w-5 h-5 text-blue-600 mb-1 transition-transform group-hover:scale-110" />
-                <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Soy Talento</span>
-                <span className="text-[9px] text-slate-400 mt-0.5">Registrar CV</span>
-              </Link>
-
-              <Link 
-                href="/registro-empresa" 
-                onClick={() => setIsOpen(false)}
-                className="flex flex-col items-center justify-center p-3 bg-emerald-50/50 hover:bg-emerald-50 dark:bg-emerald-950/10 dark:hover:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/30 rounded-2xl text-center transition-all group"
-              >
-                <Building className="w-5 h-5 text-emerald-600 dark:text-emerald-400 mb-1 transition-transform group-hover:scale-110" />
-                <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Soy Empresa</span>
-                <span className="text-[9px] text-slate-400 mt-0.5">Firmar Convenio</span>
-              </Link>
             </div>
           </div>
         </div>
