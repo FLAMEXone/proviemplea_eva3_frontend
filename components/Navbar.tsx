@@ -3,8 +3,17 @@
 import { useState } from "react";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { RegistroDropdown } from "@/components/custom/RegistroDropdown";
+import { CustomDropdown } from "@/components/custom/CustomDropdown";
+import { User, Building } from "lucide-react";
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
 
 interface NavbarProps {
   theme?: "light" | "dark" | null;
@@ -32,8 +41,13 @@ export default function Navbar({ theme, toggleTheme }: NavbarProps) {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 font-bold text-white shadow-md shadow-blue-500/20">
-              PE
+            <div className="relative h-9 w-9 overflow-hidden rounded-lg shadow-md shadow-blue-500/20 shrink-0">
+              <Image
+                src="/LOGO.jpg"
+                alt="Municipalidad de Providencia"
+                fill
+                className="object-cover scale-[1.7]"
+              />
             </div>
             <span className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
               Provi<span className="text-blue-600">Emplea</span>
@@ -42,15 +56,18 @@ export default function Navbar({ theme, toggleTheme }: NavbarProps) {
 
           {/* Desktop Links */}
           <div className="hidden md:flex md:items-center md:gap-6">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
-              >
-                {link.name}
-              </a>
-            ))}
+            <NavigationMenu>
+              <NavigationMenuList className="gap-2">
+                {navLinks.map((link) => (
+                  <NavigationMenuItem key={link.name}>
+                    <NavigationMenuLink asChild className={`${navigationMenuTriggerStyle()} bg-transparent text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200`}>
+                      <Link href={link.href}>{link.name}</Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                ))}
+              </NavigationMenuList>
+            </NavigationMenu>
+
 
             {/* Botón de alternancia de tema */}
             {toggleTheme && (
@@ -68,7 +85,23 @@ export default function Navbar({ theme, toggleTheme }: NavbarProps) {
             )}
 
             {/* Desplegable de Registro */}
-            <RegistroDropdown />
+            <CustomDropdown 
+              triggerText="Registro"
+              options={[
+                {
+                  label: "Soy Talento",
+                  subLabel: "Inscribir CV Ciego",
+                  href: "/registro-talento",
+                  icon: <User className="w-4 h-4 text-blue-600" />
+                },
+                {
+                  label: "Soy Empresa",
+                  subLabel: "Firmar Convenio",
+                  href: "/registro-empresa",
+                  icon: <Building className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                }
+              ]}
+            />
           </div>
 
           {/* Mobile Menu Button */}
@@ -98,9 +131,27 @@ export default function Navbar({ theme, toggleTheme }: NavbarProps) {
             </a>
           ))}
 
+          {/* Mobile Registro */}
+          <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-1">
+            <Link
+              href="/registro-talento"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all"
+            >
+              <User className="w-4 h-4" /> Inscribir Perfil (Talento)
+            </Link>
+            <Link
+              href="/registro-empresa"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all"
+            >
+              <Building className="w-4 h-4" /> Registrar Empresa
+            </Link>
+          </div>
+
           {/* Mobile Toggle Theme */}
-          <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-3">
-            <div className="flex items-center justify-between">
+          <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+            <div className="flex items-center justify-between px-1 py-2">
               <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">Tema Visual</span>
               {toggleTheme && (
                 <button

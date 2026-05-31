@@ -1,5 +1,6 @@
 import { EyeOff, Accessibility, Zap, ShieldCheck } from "lucide-react";
 import { CustomBadge } from "@/components/custom/CustomBadge";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function About() {
   const pillars = [
@@ -48,20 +49,22 @@ export default function About() {
           </div>
 
           {/* Pillars List */}
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-4">
             {pillars.map((pillar, index) => (
-              <div
+              <Card
                 key={index}
-                className="flex gap-4 p-5 bg-white dark:bg-slate-950 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-md shadow-slate-100/50 dark:shadow-none hover:shadow-lg dark:hover:border-slate-700 transition-all duration-300"
+                className="flex gap-4 p-5 hover:shadow-md dark:hover:border-slate-700 transition-all duration-300"
               >
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/20 shadow-sm border border-blue-100/50 dark:border-blue-800/30">
-                  {pillar.icon}
-                </div>
-                <div className="flex flex-col gap-1">
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">{pillar.title}</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{pillar.description}</p>
-                </div>
-              </div>
+                <CardContent className="flex gap-4 p-0">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/20 shadow-sm border border-blue-100/50 dark:border-blue-800/30">
+                    {pillar.icon}
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">{pillar.title}</h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{pillar.description}</p>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>

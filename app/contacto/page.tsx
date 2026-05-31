@@ -3,13 +3,10 @@
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { 
   ArrowLeft, 
   Loader2, 
   AlertCircle, 
-  Info
 } from "lucide-react";
 import { getTalentos, getEmpresas, crearContacto } from "@/lib/infrastructure/api";
 import { type IPersona as Persona } from "@/lib/domain/interfaces/persona.interface";
@@ -27,7 +24,7 @@ function ContactoFormContent() {
   const [talento, setTalento] = React.useState<Persona | null>(null);
   const [empresas, setEmpresas] = React.useState<Empresa[]>([]);
   const [loadingData, setLoadingData] = React.useState(true);
-  const [isDemoMode, setIsDemoMode] = React.useState(false);
+  const [isDuplicated, setIsDuplicated] = React.useState(false);
 
   const [selectedEmpresa, setSelectedEmpresa] = React.useState("");
   const [notes, setNotes] = React.useState("");
@@ -37,7 +34,6 @@ function ContactoFormContent() {
   const [submitSuccess, setSubmitSuccess] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [validationErrors, setValidationErrors] = React.useState<Record<string, string[]>>({});
-  const [isDuplicated, setIsDuplicated] = React.useState(false);
 
   const [liveErrors, setLiveErrors] = React.useState({
     selectedEmpresa: "",
@@ -94,12 +90,11 @@ function ContactoFormContent() {
         setEmpresas(empresasRemotas);
       } catch (err) {
         console.warn("Laravel API offline en Formulario, activando Modo Demostración:", err);
-        setIsDemoMode(true);
 
         // Cargar fallbacks locales oficiales
         const { MOCK_TALENTOS } = await import("@/lib/infrastructure/mocks/personas.mock");
         const { MOCK_EMPRESAS } = await import("@/lib/infrastructure/mocks/empresa.mock");
-        const selected = MOCK_TALENTOS.find((t: any) => t.id === personaId);
+        const selected = MOCK_TALENTOS.find((t: Persona) => t.id === personaId);
         if (selected) {
           setTalento(selected);
         }
@@ -147,29 +142,27 @@ function ContactoFormContent() {
     try {
       await crearContacto(selectedEmpresa, personaId, notes);
       setSubmitSuccess(true);
-      setIsDemoMode(false);
       setSubmitting(false);
-    } catch (err: any) {
-      const isNetworkError = !err.status || err.status === 504 || err.message?.includes("fetch") || err.message?.includes("Failed to fetch");
+    } catch (err: unknown) {
+      const error = err as { status?: number; message?: string; errors?: Record<string, string[]> };
+      const isNetworkError = !error.status || error.status === 504 || error.message?.includes("fetch") || error.message?.includes("Failed to fetch");
 
       if (isNetworkError) {
-        setIsDemoMode(true);
-        
         setTimeout(() => {
           setSubmitSuccess(true);
           setSubmitting(false);
         }, 1500);
       } else {
-        if (err.status === 409) {
+        if (error.status === 409) {
           setIsDuplicated(true);
-          setErrorMessage(err.message || "Ya existe un proceso de intermediación activo para este talento con la empresa seleccionada.");
+          setErrorMessage(error.message || "Ya existe un proceso de intermediación activo para este talento con la empresa seleccionada.");
         }
-        else if (err.status === 422 && err.errors) {
-          setValidationErrors(err.errors);
+        else if (error.status === 422 && error.errors) {
+          setValidationErrors(error.errors);
           setErrorMessage("Los datos enviados no superaron las validaciones de la municipalidad.");
         } 
         else {
-          setErrorMessage(err.message || "No fue posible registrar la intermediación. Por favor, reintente.");
+          setErrorMessage(error.message || "No fue posible registrar la intermediación. Por favor, reintente.");
         }
         setSubmitting(false);
       }
@@ -193,7 +186,7 @@ function ContactoFormContent() {
         <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
         <h2 className="text-2xl font-black text-slate-900 dark:text-slate-100">Talento No Especificado</h2>
         <p className="text-slate-500 dark:text-slate-400 mt-2 max-w-md mx-auto leading-relaxed">
-          Para solicitar una intermediación laboral, debes seleccionar un perfil desde la Vitrina de Talentos de Providencia.
+          Para solicitar una intermediación laboral, debes seleccionar un perfil desde la Vitrina de Talentos.
         </p>
         <Link
           href="/#talentos"
@@ -219,20 +212,6 @@ function ContactoFormContent() {
         </Link>
       </div>
 
-      {/* Banner de Modo Demostración */}
-      {isDemoMode && (
-        <div className="mb-8 p-4 rounded-2xl bg-amber-50 border border-amber-200/50 dark:bg-amber-950/20 dark:border-amber-900/30 flex gap-3 items-start animate-in fade-in slide-in-from-top-3">
-          <Info className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-          <div>
-            <h4 className="text-xs font-bold text-amber-800 dark:text-amber-400 uppercase tracking-wider">
-              Modo Demostración Activo (Servidor Offline)
-            </h4>
-            <p className="text-xs text-amber-700 dark:text-slate-300 mt-1 leading-relaxed">
-              El backend municipal no está activo en este momento. Se han cargado las empresas y talentos simulados localmente. Al enviar este formulario se simulará un registro de intermediación exitoso.
-            </p>
-          </div>
-        </div>
-      )}
 
       {submitSuccess ? (
         <ContactoSuccess
@@ -259,7 +238,6 @@ function ContactoFormContent() {
             validationErrors={validationErrors}
             setValidationErrors={setValidationErrors}
             liveErrors={liveErrors}
-            touched={touched}
             setTouched={setTouched}
             isDuplicated={isDuplicated}
           />
@@ -270,42 +248,10 @@ function ContactoFormContent() {
 }
 
 export default function ContactoPage() {
-  const [theme, setTheme] = React.useState<"light" | "dark" | null>(null);
-
-  React.useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
-    
-    setTheme(initialTheme);
-    if (initialTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    if (!theme) return;
-    const nextTheme = theme === "light" ? "dark" : "light";
-    setTheme(nextTheme);
-    localStorage.setItem("theme", nextTheme);
-    
-    if (nextTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
-
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 transition-colors duration-300">
-      <Navbar theme={theme} toggleTheme={toggleTheme} />
-      
-      {/* Encabezado */}
+    <>
       <ContactoHeader />
 
-      {/* Contenido Principal */}
       <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
         <React.Suspense fallback={
           <div className="flex flex-col items-center justify-center py-20 gap-3 min-h-[450px]">
@@ -318,8 +264,7 @@ export default function ContactoPage() {
           <ContactoFormContent />
         </React.Suspense>
       </main>
-
-      <Footer />
-    </div>
+    </>
   );
 }
+

@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Footer() {
   return (
     <footer className="w-full bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
@@ -6,11 +8,16 @@ export default function Footer() {
           {/* Logo & Desc */}
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 font-bold text-white shadow-md">
-                PE
+              <div className="relative h-9 w-9 overflow-hidden rounded-lg shrink-0">
+                <Image
+                  src="/LOGO.jpg"
+                  alt="Municipalidad de Providencia"
+                  fill
+                  className="object-cover scale-[1.7]"
+                />
               </div>
               <span className="text-xl font-extrabold tracking-tight text-white">
-                Provi<span className="text-blue-500">Emplea</span>
+                Provi<span className="text-blue-400">Emplea</span>
               </span>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">
@@ -53,10 +60,10 @@ export default function Footer() {
               Contacto Municipal
             </h3>
             <p className="text-sm text-slate-400 mb-2 leading-relaxed">
-              📍 Dirección: Manuel Rodríguez Sur 749, Santiago (Metro Toesca)
+              📍 Av. Pedro de Valdivia 963, Providencia, Santiago, Chile.
             </p>
             <p className="text-sm text-slate-400 leading-relaxed">
-              ✉️ Correo: <a href="mailto:centro.santiago@centrossercotec.cl" className="hover:text-white transition-colors">centro.santiago@centrossercotec.cl</a>
+              📞 <a href="tel:+56226543200" className="hover:text-white transition-colors">+562 2654 3200</a>
             </p>
           </div>
         </div>

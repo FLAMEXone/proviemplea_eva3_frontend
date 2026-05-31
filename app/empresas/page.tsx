@@ -1,13 +1,9 @@
 "use client";
 
 import * as React from "react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { 
   Loader2, 
   Search,
-  Info,
-  Sparkles,
   Database
 } from "lucide-react";
 import { getEmpresas } from "@/lib/infrastructure/api";
@@ -16,40 +12,9 @@ import EmpresaCard from "@/components/empresas/EmpresaCard";
 import { CustomBadge } from "@/components/custom/CustomBadge";
 
 export default function EmpresasPage() {
-  const [theme, setTheme] = React.useState<"light" | "dark" | null>(null);
-
-  // Estados de datos
   const [empresas, setEmpresas] = React.useState<IEmpresa[]>([]);
   const [loading, setLoading] = React.useState(true);
-  const [isDemoMode, setIsDemoMode] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
-
-  // Carga de Tema
-  React.useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
-    
-    setTheme(initialTheme);
-    if (initialTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    if (!theme) return;
-    const nextTheme = theme === "light" ? "dark" : "light";
-    setTheme(nextTheme);
-    localStorage.setItem("theme", nextTheme);
-    
-    if (nextTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
 
   // Carga inicial de datos
   React.useEffect(() => {
@@ -57,10 +22,7 @@ export default function EmpresasPage() {
       try {
         const fetchedEmpresas = await getEmpresas();
         setEmpresas(fetchedEmpresas);
-      } catch (err) {
-        console.warn("Laravel API offline, activando Modo Demostración en directorio:", err);
-        setIsDemoMode(true);
-        
+      } catch {
         const { MOCK_EMPRESAS } = await import("@/lib/infrastructure/mocks/empresa.mock");
         setEmpresas(MOCK_EMPRESAS);
       } finally {
@@ -78,10 +40,7 @@ export default function EmpresasPage() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 transition-colors duration-300">
-      <Navbar theme={theme} toggleTheme={toggleTheme} />
-
-      {/* Banner decorativo */}
+    <>
       <div className="relative overflow-hidden bg-slate-900 text-white py-12 dark:bg-black/40">
         <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/30 to-teal-600/30 opacity-40" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
@@ -95,30 +54,13 @@ export default function EmpresasPage() {
             Directorio de Empresas Aliadas
           </h1>
           <p className="mt-3 text-slate-300 text-sm max-w-xl mx-auto leading-relaxed">
-            Conoce a las organizaciones con convenio activo en Providencia. Estas corporaciones impulsan la inclusión social y participan de la vitrina de reclutamiento sin sesgos.
+            Conoce a las organizaciones con convenio activo. Estas corporaciones impulsan la inclusión social y participan de la vitrina de reclutamiento sin sesgos.
           </p>
         </div>
       </div>
 
-      {/* Alerta de Modo Demostración */}
-      {isDemoMode && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 w-full">
-          <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200/50 dark:bg-amber-950/20 dark:border-amber-900/30 flex gap-3 items-start animate-in fade-in slide-in-from-top-3">
-            <Info className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-            <div className="text-xs">
-              <h4 className="font-bold text-amber-800 dark:text-amber-400 uppercase tracking-wider">
-                Modo Demostración Activo
-              </h4>
-              <p className="text-amber-700 dark:text-slate-300 mt-0.5 leading-relaxed">
-                El backend municipal no está activo. Se han cargado las empresas mockeadas de Providencia para verificar la responsividad y la búsqueda reactiva local.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
 
-      {/* Contenido Principal */}
-      <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+      <div className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
@@ -129,7 +71,6 @@ export default function EmpresasPage() {
                 Nómina de empresas que participan activamente en los procesos de intermediación inclusiva.
               </p>
             </div>
-            {/* Buscador */}
             <div className="relative max-w-sm w-full">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
                 <Search className="w-4.5 h-4.5" />
@@ -165,9 +106,8 @@ export default function EmpresasPage() {
             </div>
           )}
         </div>
-      </main>
-
-      <Footer />
-    </div>
+      </div>
+    </>
   );
 }
+
