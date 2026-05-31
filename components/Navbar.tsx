@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { CustomDropdown } from "@/components/custom/CustomDropdown";
 import { User, Building } from "lucide-react";
@@ -40,8 +41,13 @@ export default function Navbar({ theme, toggleTheme }: NavbarProps) {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 font-bold text-white shadow-md shadow-blue-500/20">
-              PE
+            <div className="relative h-9 w-9 overflow-hidden rounded-lg shadow-md shadow-blue-500/20 shrink-0">
+              <Image
+                src="/LOGO.jpg"
+                alt="Municipalidad de Providencia"
+                fill
+                className="object-cover scale-[1.7]"
+              />
             </div>
             <span className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
               Provi<span className="text-blue-600">Emplea</span>

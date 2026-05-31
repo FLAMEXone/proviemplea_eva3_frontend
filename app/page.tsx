@@ -45,7 +45,7 @@ export default function Home() {
     <>
       <Hero />
 
-      <section className="bg-white dark:bg-slate-955 border-b border-slate-100 dark:border-slate-900 py-10 sm:py-14 w-full">
+      <section className="bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-900 py-10 sm:py-14 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
             <div className="flex justify-center items-center py-4 gap-2">
