@@ -3,6 +3,12 @@
 import * as React from "react";
 import { CheckCircle2, PlusCircle, AlertCircle, Loader2, Sparkles, HeartHandshake, ShieldCheck } from "lucide-react";
 import { EModalidad, ENivelEducacional, ETipoJornada } from "@/lib/domain/enums/personas.enum";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 
 interface RegistroTalentoFormProps {
   formData: {
@@ -122,12 +128,12 @@ export default function RegistroTalentoForm({
             Tu currículum ciego se ha inyectado a los sistemas municipales. Ya figura de forma activa y validada en la vitrina del Portal de Empresas para coordinar intermediaciones laborales.
           </p>
           
-          <button
+          <Button
             onClick={() => setSubmitSuccess(false)}
-            className="mt-6 bg-slate-900 hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl text-xs transition-colors shadow-md"
+            className="mt-6 bg-slate-900 hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl text-xs transition-colors shadow-md cursor-pointer"
           >
             Inscribir otro perfil de Talento
-          </button>
+          </Button>
         </div>
       ) : (
         /* Formulario */
@@ -183,10 +189,10 @@ export default function RegistroTalentoForm({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                  <Label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                     Correo Electrónico <span className="text-red-500">*</span>
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     required
                     type="email"
                     name="email"
@@ -194,7 +200,7 @@ export default function RegistroTalentoForm({
                     onChange={handleChange}
                     onBlur={() => setTouched(prev => ({ ...prev, email: true }))}
                     placeholder="Ej: postulante@correo.cl"
-                    className="block w-full px-3.5 py-2.5 bg-white hover:bg-slate-50/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                    className="block w-full h-auto px-3.5 py-2.5 bg-white hover:bg-slate-50/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:border-blue-500 transition-all"
                   />
                   {liveErrors.email && (
                     <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-1 font-semibold flex items-center gap-1.5">
@@ -211,17 +217,17 @@ export default function RegistroTalentoForm({
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                  <Label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                     Teléfono de Contacto <span className="text-slate-400 font-normal">(Opcional)</span>
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     type="text"
                     name="telefono"
                     value={formData.telefono}
                     onChange={handleChange}
                     onBlur={() => setTouched(prev => ({ ...prev, telefono: true }))}
                     placeholder="Ej: +56912345678"
-                    className="block w-full px-3.5 py-2.5 bg-white hover:bg-slate-50/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                    className="block w-full h-auto px-3.5 py-2.5 bg-white hover:bg-slate-50/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:border-blue-500 transition-all"
                   />
                   {liveErrors.telefono && (
                     <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-1 font-semibold flex items-center gap-1.5">
@@ -242,10 +248,10 @@ export default function RegistroTalentoForm({
             {/* Fila Título de Carrera y Años de Experiencia */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                <Label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                   Título Profesional / Carrera <span className="text-red-500">*</span>
-                </label>
-                <input
+                </Label>
+                <Input
                   required
                   type="text"
                   name="titulo_carrera"
@@ -253,7 +259,7 @@ export default function RegistroTalentoForm({
                   onChange={handleChange}
                   onBlur={() => setTouched(prev => ({ ...prev, titulo_carrera: true }))}
                   placeholder="Ej: Desarrollador Backend"
-                  className="block w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                  className="block w-full h-auto px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:border-blue-500 transition-all"
                 />
                 {liveErrors.titulo_carrera && (
                   <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-1 font-semibold flex items-center gap-1.5">
@@ -266,10 +272,10 @@ export default function RegistroTalentoForm({
                 )}
               </div>
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                <Label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                   Años de Experiencia <span className="text-red-500">*</span>
-                </label>
-                <input
+                </Label>
+                <Input
                   required
                   type="number"
                   name="anios_experiencia"
@@ -278,7 +284,7 @@ export default function RegistroTalentoForm({
                   onChange={handleChange}
                   onBlur={() => setTouched(prev => ({ ...prev, anios_experiencia: true }))}
                   placeholder="Ej: 3"
-                  className="block w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                  className="block w-full h-auto px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:border-blue-500 transition-all"
                 />
                 {liveErrors.anios_experiencia && (
                   <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-1 font-semibold flex items-center gap-1.5">
@@ -295,27 +301,27 @@ export default function RegistroTalentoForm({
             {/* Fila Académica: Nivel Educacional y Año de Egreso */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                <Label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                   Nivel Educacional <span className="text-red-500">*</span>
-                </label>
-                <select
+                </Label>
+                <NativeSelect
                   name="nivel_educacional"
                   value={formData.nivel_educacional}
                   onChange={handleChange}
-                  className="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all cursor-pointer"
+                  className="w-full [&>select]:h-auto [&>select]:py-2.5 [&>select]:rounded-xl [&>select]:text-xs [&>select]:font-semibold [&>select]:bg-slate-50 dark:[&>select]:bg-slate-950 [&>select]:border-slate-200 dark:[&>select]:border-slate-800 [&>select]:text-slate-800 dark:[&>select]:text-slate-200 [&>select]:focus-visible:ring-2 [&>select]:focus-visible:ring-blue-500/20 [&>select]:focus-visible:border-blue-500"
                 >
-                  <option value={ENivelEducacional.BASICA}>Enseñanza Básica</option>
-                  <option value={ENivelEducacional.MEDIA}>Enseñanza Media</option>
-                  <option value={ENivelEducacional.TECNICA}>Educación Técnica</option>
-                  <option value={ENivelEducacional.UNIVERSITARIA}>Educación Universitaria</option>
-                  <option value={ENivelEducacional.POSTGRADO}>Postgrado (Mg/Phd)</option>
-                </select>
+                  <NativeSelectOption value={ENivelEducacional.BASICA}>Enseñanza Básica</NativeSelectOption>
+                  <NativeSelectOption value={ENivelEducacional.MEDIA}>Enseñanza Media</NativeSelectOption>
+                  <NativeSelectOption value={ENivelEducacional.TECNICA}>Educación Técnica</NativeSelectOption>
+                  <NativeSelectOption value={ENivelEducacional.UNIVERSITARIA}>Educación Universitaria</NativeSelectOption>
+                  <NativeSelectOption value={ENivelEducacional.POSTGRADO}>Postgrado (Mg/Phd)</NativeSelectOption>
+                </NativeSelect>
               </div>
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                <Label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                   Año de Egreso / Graduación <span className="text-slate-400 font-normal">(Opcional)</span>
-                </label>
-                <input
+                </Label>
+                <Input
                   type="number"
                   name="anio_egreso"
                   min="1950"
@@ -324,7 +330,7 @@ export default function RegistroTalentoForm({
                   onChange={handleChange}
                   onBlur={() => setTouched(prev => ({ ...prev, anio_egreso: true }))}
                   placeholder="Ej: 2024"
-                  className="block w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                  className="block w-full h-auto px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:border-blue-500 transition-all"
                 />
                 {liveErrors.anio_egreso && (
                   <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-1 font-semibold flex items-center gap-1.5">
@@ -341,64 +347,64 @@ export default function RegistroTalentoForm({
             {/* Fila de Condiciones: Pretensión de Renta y Tipo de Jornada */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                <Label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                   Pretensión de Renta <span className="text-red-500">*</span>
-                </label>
-                <input
+                </Label>
+                <Input
                   required
                   type="text"
                   name="rango_renta"
                   value={formData.rango_renta}
                   onChange={handleChange}
                   placeholder="Ej: $1.200.000 - $1.400.000 CLP"
-                  className="block w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                  className="block w-full h-auto px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:border-blue-500 transition-all"
                 />
                 {validationErrors.rango_renta && (
                   <p className="text-[10px] text-red-500 mt-1 font-semibold">{validationErrors.rango_renta[0]}</p>
                 )}
               </div>
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                <Label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                   Tipo de Jornada <span className="text-red-500">*</span>
-                </label>
-                <select
+                </Label>
+                <NativeSelect
                   name="tipo_jornada"
                   value={formData.tipo_jornada}
                   onChange={handleChange}
-                  className="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all cursor-pointer"
+                  className="w-full [&>select]:h-auto [&>select]:py-2.5 [&>select]:rounded-xl [&>select]:text-xs [&>select]:font-semibold [&>select]:bg-slate-50 dark:[&>select]:bg-slate-950 [&>select]:border-slate-200 dark:[&>select]:border-slate-800 [&>select]:text-slate-800 dark:[&>select]:text-slate-200 [&>select]:focus-visible:ring-2 [&>select]:focus-visible:ring-blue-500/20 [&>select]:focus-visible:border-blue-500"
                 >
-                  <option value={ETipoJornada.COMPLETA}>Completa (44 hrs/s)</option>
-                  <option value={ETipoJornada.PART_TIME}>Part Time</option>
-                  <option value={ETipoJornada.POR_HORAS}>Por Horas / Freelance</option>
-                </select>
+                  <NativeSelectOption value={ETipoJornada.COMPLETA}>Completa (44 hrs/s)</NativeSelectOption>
+                  <NativeSelectOption value={ETipoJornada.PART_TIME}>Part Time</NativeSelectOption>
+                  <NativeSelectOption value={ETipoJornada.POR_HORAS}>Por Horas / Freelance</NativeSelectOption>
+                </NativeSelect>
               </div>
             </div>
 
             {/* Fila de Modalidad: Modalidad de Trabajo */}
             <div className="grid grid-cols-1 gap-4">
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                <Label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                   Modalidad de Trabajo <span className="text-red-500">*</span>
-                </label>
-                <select
+                </Label>
+                <NativeSelect
                   name="modalidad"
                   value={formData.modalidad}
                   onChange={handleChange}
-                  className="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all cursor-pointer"
+                  className="w-full [&>select]:h-auto [&>select]:py-2.5 [&>select]:rounded-xl [&>select]:text-xs [&>select]:font-semibold [&>select]:bg-slate-50 dark:[&>select]:bg-slate-950 [&>select]:border-slate-200 dark:[&>select]:border-slate-800 [&>select]:text-slate-800 dark:[&>select]:text-slate-200 [&>select]:focus-visible:ring-2 [&>select]:focus-visible:ring-blue-500/20 [&>select]:focus-visible:border-blue-500"
                 >
-                  <option value={EModalidad.REMOTO}>Remoto</option>
-                  <option value={EModalidad.PRESENCIAL}>Presencial</option>
-                  <option value={EModalidad.HIBRIDO}>Híbrido</option>
-                </select>
+                  <NativeSelectOption value={EModalidad.REMOTO}>Remoto</NativeSelectOption>
+                  <NativeSelectOption value={EModalidad.PRESENCIAL}>Presencial</NativeSelectOption>
+                  <NativeSelectOption value={EModalidad.HIBRIDO}>Híbrido</NativeSelectOption>
+                </NativeSelect>
               </div>
             </div>
 
             {/* Competencias Destacadas */}
             <div>
-              <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+              <Label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                 Competencias Destacadas <span className="text-red-500">*</span>
-              </label>
-              <input
+              </Label>
+              <Input
                 required
                 type="text"
                 name="competencias"
@@ -406,7 +412,7 @@ export default function RegistroTalentoForm({
                 onChange={handleChange}
                 onBlur={() => setTouched(prev => ({ ...prev, competencias: true }))}
                 placeholder="Ej: React, Laravel, Docker, APIs REST (separadas por comas)"
-                className="block w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                className="block w-full h-auto px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:border-blue-500 transition-all"
               />
               {liveErrors.competencias && (
                 <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-1 font-semibold flex items-center gap-1.5">
@@ -422,17 +428,17 @@ export default function RegistroTalentoForm({
             {/* Áreas de Experiencia y Portafolio URL */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                <Label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                   Áreas de Experiencia <span className="text-slate-400 font-normal">(Opcional)</span>
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   name="areas_experiencia"
                   value={formData.areas_experiencia}
                   onChange={handleChange}
                   onBlur={() => setTouched(prev => ({ ...prev, areas_experiencia: true }))}
                   placeholder="Ej: Desarrollo Backend, Cloud, Logística (separadas por comas)"
-                  className="block w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                  className="block w-full h-auto px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:border-blue-500 transition-all"
                 />
                 {liveErrors.areas_experiencia && (
                   <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-1 font-semibold flex items-center gap-1.5">
@@ -445,17 +451,17 @@ export default function RegistroTalentoForm({
                 )}
               </div>
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                <Label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                   Portafolio o Web Personal <span className="text-slate-400 font-normal">(Opcional)</span>
-                </label>
-                <input
+                </Label>
+                <Input
                   type="url"
                   name="portafolio_url"
                   value={formData.portafolio_url}
                   onChange={handleChange}
                   onBlur={() => setTouched(prev => ({ ...prev, portafolio_url: true }))}
                   placeholder="Ej: https://github.com/miusuario"
-                  className="block w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                  className="block w-full h-auto px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:border-blue-500 transition-all"
                 />
                 {liveErrors.portafolio_url && (
                   <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-1 font-semibold flex items-center gap-1.5">
@@ -472,17 +478,17 @@ export default function RegistroTalentoForm({
             {/* Cursos / Certificaciones e Idiomas */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                <Label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                   Cursos / Certificaciones <span className="text-slate-400 font-normal">(Opcional)</span>
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   name="cursos"
                   value={formData.cursos}
                   onChange={handleChange}
                   onBlur={() => setTouched(prev => ({ ...prev, cursos: true }))}
                   placeholder="Ej: AWS Certified Cloud Practitioner, Scrum Master (separados por comas)"
-                  className="block w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                  className="block w-full h-auto px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:border-blue-500 transition-all"
                 />
                 {liveErrors.cursos && (
                   <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-1 font-semibold flex items-center gap-1.5">
@@ -495,17 +501,17 @@ export default function RegistroTalentoForm({
                 )}
               </div>
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                <Label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                   Idiomas <span className="text-slate-400 font-normal">(Opcional)</span>
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   name="idiomas"
                   value={formData.idiomas}
                   onChange={handleChange}
                   onBlur={() => setTouched(prev => ({ ...prev, idiomas: true }))}
                   placeholder="Ej: Español Nativo, Inglés C1 (separados por comas)"
-                  className="block w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                  className="block w-full h-auto px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:border-blue-500 transition-all"
                 />
                 {liveErrors.idiomas && (
                   <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-1 font-semibold flex items-center gap-1.5">
@@ -521,10 +527,10 @@ export default function RegistroTalentoForm({
 
             {/* Resumen Profesional */}
             <div>
-              <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+              <Label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                 Resumen del Currículum Ciego <span className="text-red-500">*</span>
-              </label>
-              <textarea
+              </Label>
+              <Textarea
                 required
                 rows={4}
                 name="resumen"
@@ -532,7 +538,7 @@ export default function RegistroTalentoForm({
                 onChange={handleChange}
                 onBlur={() => setTouched(prev => ({ ...prev, resumen: true }))}
                 placeholder="Describe tu trayectoria técnica, fortalezas profesionales y experiencia destacada de forma anónima, sin incluir tu nombre real ni datos de contacto..."
-                className="block w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
+                className="block w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-200 focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:border-blue-500 transition-all resize-none"
               />
               {liveErrors.resumen && (
                 <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-1 font-semibold flex items-center gap-1.5">
@@ -547,28 +553,28 @@ export default function RegistroTalentoForm({
 
             {/* Checkbox de Inclusión Ley 21.015 */}
             <div className="p-4 bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800/80 rounded-2xl flex items-start gap-3 select-none">
-              <input
-                type="checkbox"
+              <Checkbox
                 id="persona_discapacidad"
-                name="persona_discapacidad"
                 checked={formData.persona_discapacidad}
-                onChange={handleCheckboxChange}
-                className="w-4 h-4 mt-0.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500/20 cursor-pointer"
+                onCheckedChange={(checked) => 
+                  setFormData(prev => ({ ...prev, persona_discapacidad: !!checked }))
+                }
+                className="mt-0.5 border-slate-300 text-blue-600 focus-visible:ring-blue-500/20 cursor-pointer"
               />
-              <label htmlFor="persona_discapacidad" className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 leading-normal cursor-pointer flex flex-col gap-0.5">
+              <Label htmlFor="persona_discapacidad" className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 leading-normal cursor-pointer flex flex-col gap-0.5">
                 <span className="flex items-center gap-1.5 text-indigo-700 dark:text-indigo-400 font-bold uppercase tracking-wider text-[10px]">
                   <HeartHandshake className="w-3.5 h-3.5" />
                   Aplicar a la Ley de Inclusión Laboral 21.015
                 </span>
                 Poseo credencial de discapacidad vigente o pensión de invalidez, y solicito intermediación asistida de Providencia.
-              </label>
+              </Label>
             </div>
 
             {/* Botón de Enviar */}
-            <button
+            <Button
               type="submit"
               disabled={submitting}
-              className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl text-xs transition-all shadow-md shadow-blue-500/10 hover:shadow-blue-500/20 disabled:opacity-50"
+              className="w-full h-auto flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl text-xs transition-all shadow-md shadow-blue-500/10 hover:shadow-blue-500/20 disabled:opacity-50 cursor-pointer"
             >
               {submitting ? (
                 <>
@@ -581,7 +587,7 @@ export default function RegistroTalentoForm({
                   <PlusCircle className="w-3.5 h-3.5" />
                 </>
               )}
-            </button>
+            </Button>
           </form>
         </div>
       )}

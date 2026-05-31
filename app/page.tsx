@@ -8,7 +8,7 @@ import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
 
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
-import { Sparkles, Loader2, AlertCircle, X } from "lucide-react";
+import { Loader2, AlertCircle, X } from "lucide-react";
 import { getEstadisticas } from "@/lib/infrastructure/api";
 import { IEstadisticas } from "@/lib/domain/interfaces/estadisticas.interface";
 

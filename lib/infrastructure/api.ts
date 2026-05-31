@@ -23,7 +23,9 @@ export async function fetchApi<T>(path: string, options?: RequestInit): Promise<
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
     const error = new Error(errorData.message || `Error HTTP! Estado: ${response.status}`);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (error as any).status = response.status;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (error as any).errors = errorData.errors;
     throw error;
   }
