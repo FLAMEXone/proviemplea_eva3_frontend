@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Building, Building2, Search, ShieldCheck, User, Mail } from "lucide-react";
+import { Building, Building2, Search, ShieldCheck } from "lucide-react";
 import { IEmpresa } from "@/lib/domain/interfaces/empresa.interface";
 import { CustomBadge } from "@/components/custom/CustomBadge";
 

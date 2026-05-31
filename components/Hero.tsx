@@ -2,7 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { CustomBadge } from "@/components/custom/CustomBadge";
 import { CustomButton } from "@/components/custom/CustomButton";
-import { Sparkles } from "lucide-react";
 
 export default function Hero() {
   return (
@@ -10,7 +9,7 @@ export default function Hero() {
       id="inicio"
       className="relative w-full text-white py-14 sm:py-20 border-b border-slate-800"
     >
-      {/* Capa de imagen de fondo — overflow-hidden solo aquí para que fill no se salga */}
+    
       <div className="absolute inset-0 overflow-hidden">
         <Image
           src="/hero-bg.png"
@@ -25,7 +24,7 @@ export default function Hero() {
         <div className="absolute bottom-0 left-0 -mb-24 -ml-24 w-96 h-96 bg-emerald-600/5 rounded-full blur-3xl pointer-events-none" />
       </div>
 
-      {/* Contenido — sin overflow-hidden, libre en altura */}
+ 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center sm:text-left">
         <div className="max-w-3xl flex flex-col gap-6">
           {/* Badge */}

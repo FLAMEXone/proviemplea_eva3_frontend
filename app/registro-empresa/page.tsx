@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { Info } from "lucide-react";
 import { getEmpresas, crearEmpresa } from "@/lib/infrastructure/api";
 import { IEmpresa } from "@/lib/domain/interfaces/empresa.interface";
 import { type EmpresaFormValues } from "@/lib/schemas/empresa.schema";

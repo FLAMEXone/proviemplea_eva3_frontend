@@ -7,7 +7,6 @@ import {
   ArrowLeft, 
   Loader2, 
   AlertCircle, 
-  Info
 } from "lucide-react";
 import { getTalentos, getEmpresas, crearContacto } from "@/lib/infrastructure/api";
 import { type IPersona as Persona } from "@/lib/domain/interfaces/persona.interface";
@@ -25,7 +24,7 @@ function ContactoFormContent() {
   const [talento, setTalento] = React.useState<Persona | null>(null);
   const [empresas, setEmpresas] = React.useState<Empresa[]>([]);
   const [loadingData, setLoadingData] = React.useState(true);
-  const [isDemoMode, setIsDemoMode] = React.useState(false);
+  const [isDuplicated, setIsDuplicated] = React.useState(false);
 
   const [selectedEmpresa, setSelectedEmpresa] = React.useState("");
   const [notes, setNotes] = React.useState("");
@@ -35,7 +34,6 @@ function ContactoFormContent() {
   const [submitSuccess, setSubmitSuccess] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [validationErrors, setValidationErrors] = React.useState<Record<string, string[]>>({});
-  const [isDuplicated, setIsDuplicated] = React.useState(false);
 
   const [liveErrors, setLiveErrors] = React.useState({
     selectedEmpresa: "",
@@ -92,12 +90,11 @@ function ContactoFormContent() {
         setEmpresas(empresasRemotas);
       } catch (err) {
         console.warn("Laravel API offline en Formulario, activando Modo Demostración:", err);
-        setIsDemoMode(true);
 
         // Cargar fallbacks locales oficiales
         const { MOCK_TALENTOS } = await import("@/lib/infrastructure/mocks/personas.mock");
         const { MOCK_EMPRESAS } = await import("@/lib/infrastructure/mocks/empresa.mock");
-        const selected = MOCK_TALENTOS.find((t: any) => t.id === personaId);
+        const selected = MOCK_TALENTOS.find((t: Persona) => t.id === personaId);
         if (selected) {
           setTalento(selected);
         }
@@ -145,29 +142,27 @@ function ContactoFormContent() {
     try {
       await crearContacto(selectedEmpresa, personaId, notes);
       setSubmitSuccess(true);
-      setIsDemoMode(false);
       setSubmitting(false);
-    } catch (err: any) {
-      const isNetworkError = !err.status || err.status === 504 || err.message?.includes("fetch") || err.message?.includes("Failed to fetch");
+    } catch (err: unknown) {
+      const error = err as { status?: number; message?: string; errors?: Record<string, string[]> };
+      const isNetworkError = !error.status || error.status === 504 || error.message?.includes("fetch") || error.message?.includes("Failed to fetch");
 
       if (isNetworkError) {
-        setIsDemoMode(true);
-        
         setTimeout(() => {
           setSubmitSuccess(true);
           setSubmitting(false);
         }, 1500);
       } else {
-        if (err.status === 409) {
+        if (error.status === 409) {
           setIsDuplicated(true);
-          setErrorMessage(err.message || "Ya existe un proceso de intermediación activo para este talento con la empresa seleccionada.");
+          setErrorMessage(error.message || "Ya existe un proceso de intermediación activo para este talento con la empresa seleccionada.");
         }
-        else if (err.status === 422 && err.errors) {
-          setValidationErrors(err.errors);
+        else if (error.status === 422 && error.errors) {
+          setValidationErrors(error.errors);
           setErrorMessage("Los datos enviados no superaron las validaciones de la municipalidad.");
         } 
         else {
-          setErrorMessage(err.message || "No fue posible registrar la intermediación. Por favor, reintente.");
+          setErrorMessage(error.message || "No fue posible registrar la intermediación. Por favor, reintente.");
         }
         setSubmitting(false);
       }

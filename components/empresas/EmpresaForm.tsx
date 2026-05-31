@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircle2, PlusCircle, AlertCircle, Loader2, User } from "lucide-react";
+import { CheckCircle2, PlusCircle, AlertCircle, User } from "lucide-react";
 import { ETipoEmpresa } from "@/lib/domain/enums/empresa.enum";
 import { empresaSchema, type EmpresaFormValues } from "@/lib/schemas/empresa.schema";
 import { FormField, FormSelect, FormTextarea } from "@/components/custom/FormField";
