@@ -83,7 +83,7 @@ export default function EmpresaForm({
           Solicitar Convenio Municipal
         </h3>
         <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
-          Inscribe a tu empresa para integrarla con la base de datos de currículums ciegos aprobados en Providencia.
+          Inscribe a tu empresa para integrarla con la base de datos de currículums ciegos aprobados.
         </p>
       </div>
 

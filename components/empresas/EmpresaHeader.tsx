@@ -10,7 +10,7 @@ export default function EmpresaHeader() {
       backHref="/"
       backText="Volver al Inicio"
       badge={{
-        text: "Convenios de Empleo de Providencia",
+        text: "Convenios de Empleo",
         color: "blue",
         icon: <Building2 className="w-3.5 h-3.5" />,
       }}

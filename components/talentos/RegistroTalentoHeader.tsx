@@ -10,7 +10,7 @@ export default function RegistroTalentoHeader() {
       backHref="/"
       backText="Volver al Inicio"
       badge={{
-        text: "Registro de Talentos de Providencia",
+        text: "Registro de Talentos",
         color: "blue",
         icon: <UserPlus className="w-3.5 h-3.5" />,
       }}

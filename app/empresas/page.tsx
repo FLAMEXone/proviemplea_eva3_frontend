@@ -54,7 +54,7 @@ export default function EmpresasPage() {
             Directorio de Empresas Aliadas
           </h1>
           <p className="mt-3 text-slate-300 text-sm max-w-xl mx-auto leading-relaxed">
-            Conoce a las organizaciones con convenio activo en Providencia. Estas corporaciones impulsan la inclusión social y participan de la vitrina de reclutamiento sin sesgos.
+            Conoce a las organizaciones con convenio activo. Estas corporaciones impulsan la inclusión social y participan de la vitrina de reclutamiento sin sesgos.
           </p>
         </div>
       </div>

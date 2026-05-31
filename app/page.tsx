@@ -100,7 +100,7 @@ export default function Home() {
               ¿Qué dicen quienes nos usan?
             </h2>
             <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
-              Empresas aliadas y vecinos beneficiados comparten cómo el formato de CV Ciego de Providencia promueve una selección más justa e inclusiva.
+              Empresas aliadas y vecinos beneficiados comparten cómo el formato de CV Ciego de Proviemplea promueve una selección más justa e inclusiva.
             </p>
           </div>
 

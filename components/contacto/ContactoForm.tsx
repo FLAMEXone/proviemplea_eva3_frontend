@@ -57,7 +57,7 @@ export default function ContactoForm({
           Formulario de Intermediación
         </h3>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-          Ingresa los datos para solicitar la vinculación a través del equipo de empleo de Providencia.
+          Ingresa los datos para solicitar la vinculación a través del equipo de empleo de la Municipalidad de Providencia.
         </p>
       </div>
 
@@ -143,7 +143,7 @@ export default function ContactoForm({
             </p>
           )}
           <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-2 leading-relaxed">
-            Solo se despliegan empresas activas con convenio de empleo vigente en Providencia.
+            Solo se despliegan empresas activas con convenio de empleo vigente.
           </p>
         </div>
 
