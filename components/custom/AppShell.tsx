@@ -3,6 +3,8 @@
 import * as React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Toaster } from "@/components/ui/sonner";
+import { ApiStatusMonitor } from "@/components/custom/ApiStatusMonitor";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = React.useState<"light" | "dark" | null>(null);
@@ -40,6 +42,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         {children}
       </main>
       <Footer />
+      <ApiStatusMonitor />
+      <Toaster position="bottom-right" richColors expand={false} />
     </div>
   );
 }

@@ -217,20 +217,6 @@ function ContactoFormContent() {
         </Link>
       </div>
 
-      {/* Banner de Modo Demostración */}
-      {isDemoMode && (
-        <div className="mb-8 p-4 rounded-2xl bg-amber-50 border border-amber-200/50 dark:bg-amber-950/20 dark:border-amber-900/30 flex gap-3 items-start animate-in fade-in slide-in-from-top-3">
-          <Info className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-          <div>
-            <h4 className="text-xs font-bold text-amber-800 dark:text-amber-400 uppercase tracking-wider">
-              Modo Demostración Activo (Servidor Offline)
-            </h4>
-            <p className="text-xs text-amber-700 dark:text-slate-300 mt-1 leading-relaxed">
-              El backend municipal no está activo en este momento. Se han cargado las empresas y talentos simulados localmente. Al enviar este formulario se simulará un registro de intermediación exitoso.
-            </p>
-          </div>
-        </div>
-      )}
 
       {submitSuccess ? (
         <ContactoSuccess

@@ -15,12 +15,6 @@ export default function RegistroTalentoPage() {
   const [submitSuccess, setSubmitSuccess] = React.useState(false);
   const [serverError, setServerError] = React.useState<string | null>(null);
 
-  React.useEffect(() => {
-    fetch("http://localhost:8080/api/health", { method: "GET" })
-      .then((res) => { if (!res.ok) setIsDemoMode(true); })
-      .catch(() => setIsDemoMode(true));
-  }, []);
-
   const handleSubmit = async (data: TalentoFormValues) => {
     setServerError(null);
     setSubmitting(true);
@@ -105,21 +99,6 @@ export default function RegistroTalentoPage() {
     <>
       <RegistroTalentoHeader />
 
-      {isDemoMode && (
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 w-full">
-          <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200/50 dark:bg-amber-950/20 dark:border-amber-900/30 flex gap-3 items-start animate-in fade-in slide-in-from-top-3">
-            <Info className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-            <div className="text-xs">
-              <h4 className="font-bold text-amber-800 dark:text-amber-400 uppercase tracking-wider">
-                Modo Demostración Activo (Servidor Offline)
-              </h4>
-              <p className="text-amber-700 dark:text-slate-300 mt-0.5 leading-relaxed">
-                El backend municipal no está activo. Se inyectará tu currículum ciego directamente a la vitrina simulada en memoria del Portal de Empresas.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
         <RegistroTalentoForm

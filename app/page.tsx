@@ -6,7 +6,7 @@ import About from "@/components/About";
 import FAQ from "@/components/FAQ";
 
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
-import { Loader2, AlertCircle, X, MessageSquareQuote } from "lucide-react";
+import { Loader2, MessageSquareQuote } from "lucide-react";
 import { CustomBadge } from "@/components/custom/CustomBadge";
 import { getEstadisticas } from "@/lib/infrastructure/api";
 import { IEstadisticas } from "@/lib/domain/interfaces/estadisticas.interface";
@@ -22,7 +22,6 @@ export default function Home() {
     contactos_exitosos: 0
   });
   const [loading, setLoading] = React.useState(true);
-  const [showMockToast, setShowMockToast] = React.useState(false);
 
   React.useEffect(() => {
     async function loadApiData() {
@@ -31,11 +30,9 @@ export default function Home() {
         if (fetchedStats) {
           setStats(fetchedStats);
         }
-      } catch (err) {
-        console.warn("Laravel API offline al cargar estadísticas, activando Modo Demostración:", err);
+      } catch {
         const { MOCK_ESTADISTICAS } = await import("@/lib/infrastructure/mocks/estadisticas.mock");
         setStats(MOCK_ESTADISTICAS);
-        setShowMockToast(true);
       } finally {
         setLoading(false);
       }
@@ -83,10 +80,10 @@ export default function Home() {
       <section id="testimonios" className="bg-slate-100/50 dark:bg-slate-900/30 border-y border-slate-200/50 dark:border-slate-800/80 py-20 sm:py-28 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center flex flex-col gap-4 mb-12">
-            <CustomBadge 
-              color="emerald" 
-              size="md" 
-              text="Testimonios de Impacto" 
+            <CustomBadge
+              color="emerald"
+              size="md"
+              text="Testimonios de Impacto"
               icon={<MessageSquareQuote className="w-3.5 h-3.5" />}
               className="self-center uppercase tracking-wide"
             />
@@ -103,29 +100,6 @@ export default function Home() {
       </section>
 
       <FAQ />
-
-      {showMockToast && (
-        <div className="fixed bottom-5 right-5 z-50 flex max-w-sm items-center gap-3 rounded-2xl border border-amber-200/50 bg-amber-50/95 p-4 shadow-xl backdrop-blur-md dark:border-amber-900/30 dark:bg-amber-950/95 text-slate-800 dark:text-slate-100 transition-all duration-500 animate-in slide-in-from-bottom-5">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 dark:bg-amber-500/20">
-            <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-          </div>
-          <div className="flex-grow">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400">
-              Modo Demostración Activo
-            </h4>
-            <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed">
-              No se detectó conexión con la base de datos municipal. Visualizando estadísticas locales simuladas.
-            </p>
-          </div>
-          <button
-            onClick={() => setShowMockToast(false)}
-            className="rounded-lg p-1.5 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 text-slate-400 hover:text-slate-600 transition-all"
-            aria-label="Cerrar notificación"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-      )}
     </>
   );
 }

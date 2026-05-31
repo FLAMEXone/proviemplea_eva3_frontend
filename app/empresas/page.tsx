@@ -65,21 +65,6 @@ export default function EmpresasPage() {
         </div>
       </div>
 
-      {isDemoMode && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 w-full">
-          <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200/50 dark:bg-amber-950/20 dark:border-amber-900/30 flex gap-3 items-start animate-in fade-in slide-in-from-top-3">
-            <Info className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-            <div className="text-xs">
-              <h4 className="font-bold text-amber-800 dark:text-amber-400 uppercase tracking-wider">
-                Modo Demostración Activo
-              </h4>
-              <p className="text-amber-700 dark:text-slate-300 mt-0.5 leading-relaxed">
-                El backend municipal no está activo. Se han cargado las empresas mockeadas de Providencia para verificar la responsividad y la búsqueda reactiva local.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
         <div className="space-y-6">
