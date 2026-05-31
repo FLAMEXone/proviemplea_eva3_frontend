@@ -8,14 +8,14 @@ export default function EmpresaHeader() {
   return (
     <PageHeader
       backHref="/"
-      backText="Volver a la Vitrina de Talentos"
+      backText="Volver al Inicio"
       badge={{
         text: "Convenios de Empleo de Providencia",
         color: "blue",
         icon: <Building2 className="w-3.5 h-3.5" />,
       }}
-      title="Portal Corporativo y Empresas Aliadas"
-      description="Explora las organizaciones con convenios activos de intermediación laboral o registra tu empresa para comenzar a solicitar reclutamiento inclusivo mediante nuestro formato de CV Ciego."
+      title="Registra tu Empresa en ProviEmplea"
+      description="Integra tu organización al sistema municipal de intermediación laboral. Podrás acceder a la vitrina de currículums ciegos validados y solicitar entrevistas sin sesgos de selección."
     />
   );
 }
