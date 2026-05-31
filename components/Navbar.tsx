@@ -60,11 +60,9 @@ export default function Navbar({ theme, toggleTheme }: NavbarProps) {
               <NavigationMenuList className="gap-2">
                 {navLinks.map((link) => (
                   <NavigationMenuItem key={link.name}>
-                    <Link href={link.href} legacyBehavior passHref>
-                      <NavigationMenuLink className={`${navigationMenuTriggerStyle()} bg-transparent text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200`}>
-                        {link.name}
-                      </NavigationMenuLink>
-                    </Link>
+                    <NavigationMenuLink asChild className={`${navigationMenuTriggerStyle()} bg-transparent text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200`}>
+                      <Link href={link.href}>{link.name}</Link>
+                    </NavigationMenuLink>
                   </NavigationMenuItem>
                 ))}
               </NavigationMenuList>
