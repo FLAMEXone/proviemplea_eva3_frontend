@@ -131,9 +131,27 @@ export default function Navbar({ theme, toggleTheme }: NavbarProps) {
             </a>
           ))}
 
+          {/* Mobile Registro */}
+          <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-1">
+            <Link
+              href="/registro-talento"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all"
+            >
+              <User className="w-4 h-4" /> Inscribir Perfil (Talento)
+            </Link>
+            <Link
+              href="/registro-empresa"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all"
+            >
+              <Building className="w-4 h-4" /> Registrar Empresa
+            </Link>
+          </div>
+
           {/* Mobile Toggle Theme */}
-          <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-3">
-            <div className="flex items-center justify-between">
+          <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+            <div className="flex items-center justify-between px-1 py-2">
               <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">Tema Visual</span>
               {toggleTheme && (
                 <button

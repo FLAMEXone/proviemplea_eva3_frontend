@@ -8,23 +8,24 @@ export default function Hero() {
   return (
     <section
       id="inicio"
-      className="relative w-full text-white py-14 sm:py-20 max-h-[72vh] overflow-hidden border-b border-slate-800"
+      className="relative w-full text-white py-14 sm:py-20 border-b border-slate-800"
     >
-      {/* Imagen de fondo */}
-      <Image
-        src="/hero-bg.png"
-        alt="Equipo diverso e inclusivo trabajando en Providencia"
-        fill
-        priority
-        className="object-cover object-center"
-        quality={90}
-      />
+      {/* Capa de imagen de fondo — overflow-hidden solo aquí para que fill no se salga */}
+      <div className="absolute inset-0 overflow-hidden">
+        <Image
+          src="/hero-bg.png"
+          alt="Equipo diverso e inclusivo trabajando en Providencia"
+          fill
+          priority
+          className="object-cover object-center"
+          quality={90}
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-950/80 via-slate-900/70 to-blue-950/75" />
+        <div className="absolute top-0 right-0 -mt-24 -mr-24 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 -mb-24 -ml-24 w-96 h-96 bg-emerald-600/5 rounded-full blur-3xl pointer-events-none" />
+      </div>
 
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-950/80 via-slate-900/70 to-blue-950/75" />
-      <div className="absolute top-0 right-0 -mt-24 -mr-24 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 -mb-24 -ml-24 w-96 h-96 bg-emerald-600/5 rounded-full blur-3xl pointer-events-none" />
-
-      {/* Contenido */}
+      {/* Contenido — sin overflow-hidden, libre en altura */}
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center sm:text-left">
         <div className="max-w-3xl flex flex-col gap-6">
           {/* Badge */}
@@ -53,15 +54,17 @@ export default function Hero() {
           </p>
 
           {/* Actions */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center sm:justify-start pt-4">
+          <div className="flex flex-row flex-wrap gap-3 justify-center sm:justify-start pt-4">
             <Link href="/registro-talento">
-              <CustomButton theme="blue" size="lg" className="w-full sm:w-auto">
-                Inscribir Mi Perfil
+              <CustomButton theme="blue" size="lg" className="w-auto">
+                <span className="hidden sm:inline">Inscribir Mi Perfil</span>
+                <span className="sm:hidden">Inscribir Perfil</span>
               </CustomButton>
             </Link>
             <Link href="/talentos">
-              <CustomButton theme="outline" size="lg" className="w-full sm:w-auto">
-                Vitrina de Talentos
+              <CustomButton theme="outline" size="lg" className="w-auto">
+                <span className="hidden sm:inline">Vitrina de Talentos</span>
+                <span className="sm:hidden">Ver Vitrina</span>
               </CustomButton>
             </Link>
           </div>

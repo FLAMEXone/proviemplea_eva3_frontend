@@ -6,6 +6,7 @@ import { getTalentos } from "@/lib/infrastructure/api";
 import { IPersona } from "@/lib/domain/interfaces/persona.interface";
 import { TalentCard } from "@/components/TalentCard";
 import { CustomBadge } from "@/components/custom/CustomBadge";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 type ValidadoFilter = "todos" | "validados" | "pendientes";
 
@@ -75,38 +76,40 @@ export default function TalentosPage() {
 
           {/* Barra de filtros */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-            {/* Tabs de validación */}
-            <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-1">
-              {FILTER_OPTIONS.map(opt => (
-                <button
-                  key={opt.value}
-                  onClick={() => setValidadoFilter(opt.value)}
-                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
-                    validadoFilter === opt.value
-                      ? opt.value === "validados"
-                        ? "bg-emerald-600 text-white shadow-sm"
-                        : opt.value === "pendientes"
-                          ? "bg-amber-500 text-white shadow-sm"
-                          : "bg-blue-600 text-white shadow-sm"
-                      : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
-                  }`}
+            {/* ToggleGroup de validación */}
+            <div className="overflow-x-auto">
+              <ToggleGroup
+                type="single"
+                value={validadoFilter}
+                onValueChange={(val) => val && setValidadoFilter(val as ValidadoFilter)}
+                spacing={0}
+                className="inline-flex items-center rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 p-0.5 gap-0 whitespace-nowrap"
+              >
+                <ToggleGroupItem
+                  value="todos"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold border-0 bg-transparent text-slate-400 dark:text-slate-500 data-[state=on]:bg-white dark:data-[state=on]:bg-slate-800 data-[state=on]:text-slate-700 dark:data-[state=on]:text-slate-200 data-[state=on]:shadow-sm transition-all duration-150"
                 >
-                  {opt.icon}
-                  {opt.label}
-                  {/* Contador */}
-                  {!loading && (
-                    <span className={`ml-1 text-[10px] font-extrabold px-1.5 py-0.5 rounded-full ${
-                      validadoFilter === opt.value
-                        ? "bg-white/20 text-white"
-                        : "bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
-                    }`}>
-                      {opt.value === "todos"      ? talentos.length
-                       : opt.value === "validados" ? talentos.filter(t => t.validado).length
-                       : talentos.filter(t => !t.validado).length}
-                    </span>
-                  )}
-                </button>
-              ))}
+                  <LayoutList className="w-3.5 h-3.5 shrink-0" />
+                  <span>Todos</span>
+                  {!loading && <span className="text-[10px] font-extrabold">{talentos.length}</span>}
+                </ToggleGroupItem>
+                <ToggleGroupItem
+                  value="validados"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold border-0 bg-transparent text-slate-400 dark:text-slate-500 data-[state=on]:bg-white dark:data-[state=on]:bg-slate-800 data-[state=on]:text-emerald-600 dark:data-[state=on]:text-emerald-400 data-[state=on]:shadow-sm transition-all duration-150"
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                  <span>Validados</span>
+                  {!loading && <span className="text-[10px] font-extrabold">{talentos.filter(t => t.validado).length}</span>}
+                </ToggleGroupItem>
+                <ToggleGroupItem
+                  value="pendientes"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold border-0 bg-transparent text-slate-400 dark:text-slate-500 data-[state=on]:bg-white dark:data-[state=on]:bg-slate-800 data-[state=on]:text-amber-500 dark:data-[state=on]:text-amber-400 data-[state=on]:shadow-sm transition-all duration-150"
+                >
+                  <Clock className="w-3.5 h-3.5 shrink-0" />
+                  <span>Pendientes</span>
+                  {!loading && <span className="text-[10px] font-extrabold">{talentos.filter(t => !t.validado).length}</span>}
+                </ToggleGroupItem>
+              </ToggleGroup>
             </div>
 
             {/* Buscador */}

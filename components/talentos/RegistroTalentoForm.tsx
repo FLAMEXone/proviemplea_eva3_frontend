@@ -28,6 +28,7 @@ export default function RegistroTalentoForm({
 }: RegistroTalentoFormProps) {
   const methods = useForm<TalentoFormValues>({
     resolver: zodResolver(talentoSchema),
+    mode: "onTouched",
     defaultValues: {
       email: "",
       telefono: "",
@@ -68,7 +69,7 @@ export default function RegistroTalentoForm({
           </div>
           <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">¡Perfil Registrado con Éxito!</h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 max-w-sm mx-auto leading-relaxed">
-            Tu currículum ciego ya figura de forma activa en la vitrina del Portal de Empresas para coordinar intermediaciones laborales.
+            Tu currículum ya figura de forma activa en la vitrina del Portal de Empresas para coordinar intermediaciones laborales.
           </p>
           <CustomButton
             theme="blue"

@@ -26,6 +26,7 @@ export default function EmpresaForm({
 }: EmpresaFormProps) {
   const methods = useForm<EmpresaFormValues>({
     resolver: zodResolver(empresaSchema),
+    mode: "onTouched",
     defaultValues: {
       nombre_empresa: "",
       rut_empresa: "",
