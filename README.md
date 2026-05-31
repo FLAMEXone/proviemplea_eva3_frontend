@@ -2,6 +2,8 @@
 
 ProviEmplea es una solución web innovadora desarrollada con **Next.js 14** e integrada con un backend en **Laravel 11**. Esta plataforma revoluciona los procesos tradicionales de reclutamiento comunal mediante el modelo de **Búsqueda Inversa** y la adopción estricta de **Currículums Ciegos (CV Ciego)** para combatir los sesgos discriminatorios y garantizar la selección laboral por mérito, experiencia y competencias técnicas.
 
+🌐 **Demo en vivo:** [proviemplea.vercel.app](https://proviemplea.vercel.app/)
+
 ---
 
 ## 🏛️ Contexto de Negocio y Diseño Inclusivo
