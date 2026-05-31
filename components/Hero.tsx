@@ -1,4 +1,7 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { CustomBadge } from "@/components/custom/CustomBadge";
+import { Sparkles } from "lucide-react";
 
 export default function Hero() {
   return (
@@ -13,9 +16,12 @@ export default function Hero() {
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center sm:text-left">
         <div className="max-w-3xl flex flex-col gap-6">
           {/* Badge */}
-          <div className="inline-flex self-center sm:self-start items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-xs font-semibold tracking-wider text-blue-400 uppercase">
-            🌟 Innovación Municipal
-          </div>
+          <CustomBadge 
+            color="glass-blue" 
+            size="md" 
+            text="Innovación Municipal" 
+            className="self-center sm:self-start uppercase tracking-wider"
+          />
 
           {/* Heading */}
           <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl text-white">
@@ -33,22 +39,23 @@ export default function Hero() {
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center sm:justify-start pt-4">
-            <a href="#talentos">
+            <Link href="/registro-talento">
               <Button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-extrabold px-8 py-6 rounded-2xl shadow-lg shadow-blue-500/20 hover:scale-105 transition-all text-base duration-300">
-                Ver Vitrina de Talentos
+                Inscribir Mi Perfil (Talentos)
               </Button>
-            </a>
-            <a href="#nosotros">
+            </Link>
+            <Link href="/talentos">
               <Button
                 variant="outline"
                 className="w-full sm:w-auto border-slate-700 bg-transparent hover:border-slate-500 text-slate-300 hover:text-white font-extrabold px-8 py-6 rounded-2xl hover:bg-slate-800/50 hover:scale-105 transition-all text-base duration-300"
               >
-                Conocer Más
+                Vitrina de Talentos (Empresas)
               </Button>
-            </a>
+            </Link>
           </div>
         </div>
       </div>
     </section>
   );
 }
+

@@ -1,3 +1,17 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends":  ["next/core-web-vitals", "next/typescript"],
+  "overrides": [
+    {
+      "files": ["src/components/ui/**/*.{ts,tsx}", "components/ui/**/*.{ts,tsx}"],
+      "rules": {
+        "no-restricted-syntax": [
+          "warn",
+          {
+            "selector": "Program",
+            "message": "❌ PROHIBIDO MODIFICAR SHADCN: La carpeta components/ui/ es de solo lectura. Si necesitas cambios, crea un nuevo componente en 'components/custom/' y extiéndelo desde ahí."
+          }
+        ]
+      }
+    }
+  ]
 }

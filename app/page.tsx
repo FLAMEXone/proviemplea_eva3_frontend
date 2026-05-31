@@ -7,58 +7,27 @@ import About from "@/components/About";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
 
-import { TalentCard } from "@/components/TalentCard";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
-import { Sparkles } from "lucide-react";
-
-// Mock de candidatos basado exactamente en la estructura de la base de datos de Laravel
-const MOCK_TALENTOS = [
-  {
-    id: "d9e83162-bbbe-426b-9c3f-ecb6613ccf68",
-    codigo_talento: "TAL-2026-001",
-    resumen: "Desarrollador Full Stack con sólida experiencia en Laravel y React. Especializado en desarrollo de APIs REST, optimización de consultas SQL y despliegue de microservicios en AWS. Altamente proactivo y enfocado en código limpio.",
-    titulo_carrera: "Ingeniero Civil en Informática",
-    nivel_educacional: "Universitario Graduado",
-    anios_experiencia: 5,
-    competencias: ["Laravel", "React", "PostgreSQL", "AWS", "Docker"],
-    rango_renta: "$1.800.000 - $2.200.000 CLP",
-    tipo_jornada: "Completa",
-    modalidad: "Remoto",
-    validado: true,
-    persona_discapacidad: false,
-  },
-  {
-    id: "3c3ef271-e94d-4da4-8b1e-7b77ab6ef1e2",
-    codigo_talento: "TAL-2026-002",
-    resumen: "Administrativa bilingüe con experiencia en gestión de oficina, atención al cliente y soporte contable. Dominio de herramientas ofimáticas avanzadas (Excel, Notion) y sistemas ERP (SAP). Alta capacidad organizativa y orientación a resultados.",
-    titulo_carrera: "Técnico en Administración de Empresas",
-    nivel_educacional: "Técnico Profesional Completo",
-    anios_experiencia: 3,
-    competencias: ["SAP ERP", "Excel Avanzado", "Gestión de Agenda", "Inglés B2", "Facturación"],
-    rango_renta: "$800.000 - $1.000.000 CLP",
-    tipo_jornada: "Completa",
-    modalidad: "Presencial",
-    validado: true,
-    persona_discapacidad: true, // Incluida bajo ley de inclusión 21015
-  },
-  {
-    id: "6f5cf9e1-ca6c-4876-b9b5-c08ef1284d12",
-    codigo_talento: "TAL-2026-003",
-    resumen: "Diseñadora UX/UI apasionada por crear interfaces digitales accesibles y centradas en el usuario. Experiencia en metodologías de diseño (Design Thinking), desarrollo de prototipos interactivos en Figma y pruebas de usabilidad con usuarios reales.",
-    titulo_carrera: "Diseñadora Gráfica Mención Multimedia",
-    nivel_educacional: "Universitario Graduado",
-    anios_experiencia: 2,
-    competencias: ["Figma", "UI Design", "Design Thinking", "HTML/CSS", "Wireframing"],
-    rango_renta: "$1.100.000 - $1.300.000 CLP",
-    tipo_jornada: "Completa",
-    modalidad: "Híbrido",
-    validado: false, // Perfil recién registrado, aún no validado por el administrador
-    persona_discapacidad: false,
-  }
-];
+import { Loader2, AlertCircle, X, MessageSquareQuote } from "lucide-react";
+import { CustomBadge } from "@/components/custom/CustomBadge";
+import { getEstadisticas } from "@/lib/infrastructure/api";
+import { IEstadisticas } from "@/lib/domain/interfaces/estadisticas.interface";
 
 export default function Home() {
   const [theme, setTheme] = React.useState<"light" | "dark" | null>(null);
+  
+  // Estados para estadísticas consolidadas
+  const [stats, setStats] = React.useState<IEstadisticas>({
+    total_personas: 0,
+    personas_validadas: 0,
+    total_empresas: 0,
+    empresas_validadas: 0,
+    contactos_pendientes: 0,
+    contactos_en_proceso: 0,
+    contactos_exitosos: 0
+  });
+  const [loading, setLoading] = React.useState(true);
+  const [showMockToast, setShowMockToast] = React.useState(false);
 
   React.useEffect(() => {
     const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
@@ -71,6 +40,26 @@ export default function Home() {
     } else {
       document.documentElement.classList.remove("dark");
     }
+  }, []);
+
+  React.useEffect(() => {
+    async function loadApiData() {
+      try {
+        const fetchedStats = await getEstadisticas();
+        if (fetchedStats) {
+          setStats(fetchedStats);
+        }
+      } catch (err) {
+        console.warn("Laravel API offline al cargar estadísticas, activando Modo Demostración:", err);
+        const { MOCK_ESTADISTICAS } = await import("@/lib/infrastructure/mocks/estadisticas.mock");
+        setStats(MOCK_ESTADISTICAS);
+        setShowMockToast(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadApiData();
   }, []);
 
   const toggleTheme = () => {
@@ -88,43 +77,53 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 transition-colors duration-300">
-      {/* Navbar con control de Dark Mode incorporado */}
       <Navbar theme={theme} toggleTheme={toggleTheme} />
       
       <Hero />
       
-      <About />
-      
-      {/* 🔮 Vitrina de Talentos Real (Hito 1 integrado) */}
-      <section id="talentos" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 w-full">
-        <div className="mb-12 text-center sm:text-left flex flex-col gap-4">
-          <div className="inline-flex self-center sm:self-start items-center gap-2 rounded-full bg-blue-100 dark:bg-blue-900/30 px-3 py-1 text-xs font-bold tracking-wide text-blue-700 dark:text-blue-400 uppercase">
-            <Sparkles className="w-4 h-4" />
-            Vitrina de Talentos Disponibles
-          </div>
-          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">
-            Currículums Ciegos Validados
-          </h2>
-          <p className="text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed">
-            Explora los perfiles profesionales de vecinas y vecinos de Providencia. Puedes solicitar intermediación laboral al equipo municipal directamente desde cada perfil.
-          </p>
-        </div>
-
-        {/* Grid de Tarjetas Reales del Hito 1 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {MOCK_TALENTOS.map((talento) => (
-            <TalentCard key={talento.id} {...talento} />
-          ))}
+      {/* Sección de Estadísticas Consolidadas */}
+      <section className="bg-white dark:bg-slate-955 border-b border-slate-100 dark:border-slate-900 py-10 sm:py-14 w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {loading ? (
+            <div className="flex justify-center items-center py-4 gap-2">
+              <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
+              <span className="text-xs font-semibold text-slate-400">Actualizando cifras de empleo municipal...</span>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8 animate-in fade-in duration-300">
+              <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/50 p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-all duration-300">
+                <span className="block text-4xl font-extrabold text-blue-600 dark:text-blue-400">{stats.personas_validadas}</span>
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2 block uppercase tracking-wider">Talentos Validados</span>
+              </div>
+              <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/50 p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-all duration-300">
+                <span className="block text-4xl font-extrabold text-teal-600 dark:text-teal-400">{stats.total_empresas}</span>
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2 block uppercase tracking-wider">Empresas Registradas</span>
+              </div>
+              <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/50 p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-all duration-300">
+                <span className="block text-4xl font-extrabold text-emerald-600 dark:text-emerald-400">{stats.contactos_exitosos}</span>
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2 block uppercase tracking-wider">Vinculaciones Exitosas</span>
+              </div>
+              <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/50 p-6 rounded-2xl text-center shadow-sm hover:shadow-md transition-all duration-300">
+                <span className="block text-4xl font-extrabold text-amber-600 dark:text-amber-400">{stats.contactos_en_proceso}</span>
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2 block uppercase tracking-wider">En Intermediación</span>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* ✍️ Testimonios de Inclusión Laboral Real (Hito 1 integrado) */}
+      <About />
+      
       <section id="testimonios" className="bg-slate-100/50 dark:bg-slate-900/30 border-y border-slate-200/50 dark:border-slate-800/80 py-20 sm:py-28 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center flex flex-col gap-4 mb-12">
-            <div className="inline-flex self-center items-center gap-2 rounded-full bg-emerald-100 dark:bg-emerald-950/40 px-3 py-1 text-xs font-bold tracking-wide text-emerald-700 dark:text-emerald-400 uppercase">
-              ✍️ Testimonios de Impacto
-            </div>
+            <CustomBadge 
+              color="emerald" 
+              size="md" 
+              text="Testimonios de Impacto" 
+              icon={<MessageSquareQuote className="w-3.5 h-3.5" />}
+              className="self-center uppercase tracking-wide"
+            />
             <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">
               ¿Qué dicen quienes nos usan?
             </h2>
@@ -133,13 +132,35 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Carrusel de Testimonios Accesible */}
           <TestimonialsCarousel />
         </div>
       </section>
 
       <FAQ />
       <Footer />
+
+      {showMockToast && (
+        <div className="fixed bottom-5 right-5 z-50 flex max-w-sm items-center gap-3 rounded-2xl border border-amber-200/50 bg-amber-50/95 p-4 shadow-xl backdrop-blur-md dark:border-amber-900/30 dark:bg-amber-950/95 text-slate-800 dark:text-slate-100 transition-all duration-500 animate-in slide-in-from-bottom-5">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 dark:bg-amber-500/20">
+            <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+          </div>
+          <div className="flex-grow">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400">
+              Modo Demostración Activo
+            </h4>
+            <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed">
+              No se detectó conexión con la base de datos municipal. Visualizando estadísticas locales simuladas.
+            </p>
+          </div>
+          <button
+            onClick={() => setShowMockToast(false)}
+            className="rounded-lg p-1.5 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 text-slate-400 hover:text-slate-600 transition-all"
+            aria-label="Cerrar notificación"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
