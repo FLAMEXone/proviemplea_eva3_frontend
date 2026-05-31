@@ -4,7 +4,15 @@ import { useState } from "react";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { RegistroDropdown } from "@/components/custom/RegistroDropdown";
+import { CustomDropdown } from "@/components/custom/CustomDropdown";
+import { User, Building } from "lucide-react";
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
 
 interface NavbarProps {
   theme?: "light" | "dark" | null;
@@ -42,15 +50,20 @@ export default function Navbar({ theme, toggleTheme }: NavbarProps) {
 
           {/* Desktop Links */}
           <div className="hidden md:flex md:items-center md:gap-6">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
-              >
-                {link.name}
-              </a>
-            ))}
+            <NavigationMenu>
+              <NavigationMenuList className="gap-2">
+                {navLinks.map((link) => (
+                  <NavigationMenuItem key={link.name}>
+                    <Link href={link.href} legacyBehavior passHref>
+                      <NavigationMenuLink className={`${navigationMenuTriggerStyle()} bg-transparent text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200`}>
+                        {link.name}
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                ))}
+              </NavigationMenuList>
+            </NavigationMenu>
+
 
             {/* Botón de alternancia de tema */}
             {toggleTheme && (
@@ -68,7 +81,23 @@ export default function Navbar({ theme, toggleTheme }: NavbarProps) {
             )}
 
             {/* Desplegable de Registro */}
-            <RegistroDropdown />
+            <CustomDropdown 
+              triggerText="Registro"
+              options={[
+                {
+                  label: "Soy Talento",
+                  subLabel: "Inscribir CV Ciego",
+                  href: "/registro-talento",
+                  icon: <User className="w-4 h-4 text-blue-600" />
+                },
+                {
+                  label: "Soy Empresa",
+                  subLabel: "Firmar Convenio",
+                  href: "/registro-empresa",
+                  icon: <Building className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                }
+              ]}
+            />
           </div>
 
           {/* Mobile Menu Button */}

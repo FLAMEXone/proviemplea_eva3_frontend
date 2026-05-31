@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { CustomButton } from "@/components/custom/CustomButton";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 
 interface RegistroTalentoFormProps {
@@ -570,24 +571,16 @@ export default function RegistroTalentoForm({
               </Label>
             </div>
 
-            {/* Botón de Enviar */}
-            <Button
+            <CustomButton
               type="submit"
-              disabled={submitting}
-              className="w-full h-auto flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl text-xs transition-all shadow-md shadow-blue-500/10 hover:shadow-blue-500/20 disabled:opacity-50 cursor-pointer"
+              theme="blue"
+              size="sm"
+              isLoading={submitting}
+              rightIcon={<PlusCircle className="w-3.5 h-3.5" />}
+              className="w-full"
             >
-              {submitting ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Inscribiendo Perfil en Providencia...
-                </>
-              ) : (
-                <>
-                  Inscribir Perfil Inclusivo
-                  <PlusCircle className="w-3.5 h-3.5" />
-                </>
-              )}
-            </Button>
+              {submitting ? "Inscribiendo Perfil en Providencia..." : "Inscribir Perfil Inclusivo"}
+            </CustomButton>
           </form>
         </div>
       )}

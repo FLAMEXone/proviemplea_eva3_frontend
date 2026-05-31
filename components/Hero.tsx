@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { CustomBadge } from "@/components/custom/CustomBadge";
+import { CustomButton } from "@/components/custom/CustomButton";
 import { Sparkles } from "lucide-react";
 
 export default function Hero() {
@@ -40,17 +40,14 @@ export default function Hero() {
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center sm:justify-start pt-4">
             <Link href="/registro-talento">
-              <Button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-extrabold px-8 py-6 rounded-2xl shadow-lg shadow-blue-500/20 hover:scale-105 transition-all text-base duration-300">
+              <CustomButton theme="blue" size="lg" className="w-full sm:w-auto">
                 Inscribir Mi Perfil (Talentos)
-              </Button>
+              </CustomButton>
             </Link>
             <Link href="/talentos">
-              <Button
-                variant="outline"
-                className="w-full sm:w-auto border-slate-700 bg-transparent hover:border-slate-500 text-slate-300 hover:text-white font-extrabold px-8 py-6 rounded-2xl hover:bg-slate-800/50 hover:scale-105 transition-all text-base duration-300"
-              >
+              <CustomButton theme="outline" size="lg" className="w-full sm:w-auto">
                 Vitrina de Talentos (Empresas)
-              </Button>
+              </CustomButton>
             </Link>
           </div>
         </div>

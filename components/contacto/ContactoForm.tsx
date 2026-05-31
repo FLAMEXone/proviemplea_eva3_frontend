@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Building, Building2, AlertCircle, AlertTriangle, Loader2, Send, MessageSquare } from "lucide-react";
 import { IEmpresa } from "@/lib/domain/interfaces/empresa.interface";
+import { CustomButton } from "@/components/custom/CustomButton";
 
 interface ContactoFormProps {
   empresas: IEmpresa[];
@@ -199,24 +200,16 @@ export default function ContactoForm({
           </p>
         </div>
 
-        {/* Botón de Enviar */}
-        <button
+        <CustomButton
           type="submit"
-          disabled={submitting}
-          className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-2xl transition-all shadow-md shadow-blue-500/10 hover:shadow-blue-500/20 disabled:opacity-50"
+          theme="blue"
+          size="default"
+          isLoading={submitting}
+          rightIcon={<Send className="w-3.5 h-3.5" />}
+          className="w-full py-3.5"
         >
-          {submitting ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Procesando con Servidores Municipales...
-            </>
-          ) : (
-            <>
-              Enviar Solicitud de Intermediación
-              <Send className="w-3.5 h-3.5" />
-            </>
-          )}
-        </button>
+          {submitting ? "Procesando con Servidores Municipales..." : "Enviar Solicitud de Intermediación"}
+        </CustomButton>
       </form>
     </div>
   );

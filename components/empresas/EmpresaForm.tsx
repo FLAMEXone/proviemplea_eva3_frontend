@@ -3,6 +3,7 @@
 import * as React from "react";
 import { CheckCircle2, PlusCircle, AlertCircle, Loader2, User } from "lucide-react";
 import { ETipoEmpresa } from "@/lib/domain/enums/empresa.enum";
+import { CustomButton } from "@/components/custom/CustomButton";
 
 interface EmpresaFormProps {
   formData: {
@@ -88,12 +89,14 @@ export default function EmpresaForm({
             El convenio se ha ingresado de manera exitosa en el sistema municipal de Providencia. La empresa ya figura en la nómina para intermediaciones laborales.
           </p>
           
-          <button
+          <CustomButton
+            theme="blue"
+            size="sm"
+            className="mt-6 w-full"
             onClick={() => setSubmitSuccess(false)}
-            className="mt-6 w-full bg-slate-900 hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl text-xs transition-colors shadow-md"
           >
             Registrar otra empresa
-          </button>
+          </CustomButton>
         </div>
       ) : (
         /* Formulario */
@@ -341,24 +344,16 @@ export default function EmpresaForm({
               )}
             </div>
 
-            {/* Botón de Enviar */}
-            <button
+            <CustomButton
               type="submit"
-              disabled={submitting}
-              className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl text-xs transition-all shadow-md shadow-blue-500/10 hover:shadow-blue-500/20 disabled:opacity-50"
+              theme="blue"
+              size="sm"
+              isLoading={submitting}
+              rightIcon={<PlusCircle className="w-3.5 h-3.5" />}
+              className="w-full"
             >
-              {submitting ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Registrando Convenio...
-                </>
-              ) : (
-                <>
-                  Registrar Convenio Corporativo
-                  <PlusCircle className="w-3.5 h-3.5" />
-                </>
-              )}
-            </button>
+              {submitting ? "Registrando Convenio..." : "Registrar Convenio Corporativo"}
+            </CustomButton>
           </form>
         </div>
       )}
