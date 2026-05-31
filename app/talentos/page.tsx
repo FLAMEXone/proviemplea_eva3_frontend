@@ -1,8 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { 
   Loader2, 
   Search,
@@ -68,40 +66,10 @@ function isTalentoCompleto(talento: IPersona): boolean {
 }
 
 export default function TalentosPage() {
-  const [theme, setTheme] = React.useState<"light" | "dark" | null>(null);
-
-  // Estados de datos
   const [talentos, setTalentos] = React.useState<IPersona[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [isDemoMode, setIsDemoMode] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
-
-  // Carga de Tema
-  React.useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
-    
-    setTheme(initialTheme);
-    if (initialTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    if (!theme) return;
-    const nextTheme = theme === "light" ? "dark" : "light";
-    setTheme(nextTheme);
-    localStorage.setItem("theme", nextTheme);
-    
-    if (nextTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
 
   // Carga inicial de datos
   React.useEffect(() => {
@@ -134,10 +102,7 @@ export default function TalentosPage() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 transition-colors duration-300">
-      <Navbar theme={theme} toggleTheme={toggleTheme} />
-
-      {/* Banner decorativo */}
+    <>
       <div className="relative overflow-hidden bg-slate-900 text-white py-12 dark:bg-black/40">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/30 to-indigo-600/30 opacity-40" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
@@ -156,7 +121,6 @@ export default function TalentosPage() {
         </div>
       </div>
 
-      {/* Alerta de Modo Demostración */}
       {isDemoMode && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 w-full">
           <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200/50 dark:bg-amber-950/20 dark:border-amber-900/30 flex gap-3 items-start animate-in fade-in slide-in-from-top-3">
@@ -173,8 +137,7 @@ export default function TalentosPage() {
         </div>
       )}
 
-      {/* Contenido Principal */}
-      <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+      <div className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
@@ -185,7 +148,6 @@ export default function TalentosPage() {
                 Perfiles inclusivos que cumplen con los requisitos de intermediación municipal de Providencia.
               </p>
             </div>
-            {/* Buscador */}
             <div className="relative max-w-sm w-full">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
                 <Search className="w-4.5 h-4.5" />
@@ -221,9 +183,7 @@ export default function TalentosPage() {
             </div>
           )}
         </div>
-      </main>
-
-      <Footer />
-    </div>
+      </div>
+    </>
   );
 }

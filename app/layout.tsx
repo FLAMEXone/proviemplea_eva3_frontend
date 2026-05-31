@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
+import AppShell from "@/components/custom/AppShell";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -19,9 +19,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={cn("min-h-screen font-sans antialiased", inter.variable)}>
+    <html lang="es" className={inter.variable}>
       <body className="min-h-screen font-sans antialiased">
-        {children}
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

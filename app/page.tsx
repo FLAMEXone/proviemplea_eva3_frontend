@@ -1,11 +1,9 @@
 "use client";
 
 import * as React from "react";
-import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import FAQ from "@/components/FAQ";
-import Footer from "@/components/Footer";
 
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 import { Loader2, AlertCircle, X, MessageSquareQuote } from "lucide-react";
@@ -14,9 +12,6 @@ import { getEstadisticas } from "@/lib/infrastructure/api";
 import { IEstadisticas } from "@/lib/domain/interfaces/estadisticas.interface";
 
 export default function Home() {
-  const [theme, setTheme] = React.useState<"light" | "dark" | null>(null);
-  
-  // Estados para estadísticas consolidadas
   const [stats, setStats] = React.useState<IEstadisticas>({
     total_personas: 0,
     personas_validadas: 0,
@@ -28,19 +23,6 @@ export default function Home() {
   });
   const [loading, setLoading] = React.useState(true);
   const [showMockToast, setShowMockToast] = React.useState(false);
-
-  React.useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
-    
-    setTheme(initialTheme);
-    if (initialTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
 
   React.useEffect(() => {
     async function loadApiData() {
@@ -62,26 +44,10 @@ export default function Home() {
     loadApiData();
   }, []);
 
-  const toggleTheme = () => {
-    if (!theme) return;
-    const nextTheme = theme === "light" ? "dark" : "light";
-    setTheme(nextTheme);
-    localStorage.setItem("theme", nextTheme);
-    
-    if (nextTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
-
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 transition-colors duration-300">
-      <Navbar theme={theme} toggleTheme={toggleTheme} />
-      
+    <>
       <Hero />
-      
-      {/* Sección de Estadísticas Consolidadas */}
+
       <section className="bg-white dark:bg-slate-955 border-b border-slate-100 dark:border-slate-900 py-10 sm:py-14 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
@@ -113,7 +79,7 @@ export default function Home() {
       </section>
 
       <About />
-      
+
       <section id="testimonios" className="bg-slate-100/50 dark:bg-slate-900/30 border-y border-slate-200/50 dark:border-slate-800/80 py-20 sm:py-28 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center flex flex-col gap-4 mb-12">
@@ -137,7 +103,6 @@ export default function Home() {
       </section>
 
       <FAQ />
-      <Footer />
 
       {showMockToast && (
         <div className="fixed bottom-5 right-5 z-50 flex max-w-sm items-center gap-3 rounded-2xl border border-amber-200/50 bg-amber-50/95 p-4 shadow-xl backdrop-blur-md dark:border-amber-900/30 dark:bg-amber-950/95 text-slate-800 dark:text-slate-100 transition-all duration-500 animate-in slide-in-from-bottom-5">
@@ -161,6 +126,6 @@ export default function Home() {
           </button>
         </div>
       )}
-    </div>
+    </>
   );
 }

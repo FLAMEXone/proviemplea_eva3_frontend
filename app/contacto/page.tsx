@@ -3,8 +3,6 @@
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { 
   ArrowLeft, 
   Loader2, 
@@ -270,42 +268,10 @@ function ContactoFormContent() {
 }
 
 export default function ContactoPage() {
-  const [theme, setTheme] = React.useState<"light" | "dark" | null>(null);
-
-  React.useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
-    
-    setTheme(initialTheme);
-    if (initialTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    if (!theme) return;
-    const nextTheme = theme === "light" ? "dark" : "light";
-    setTheme(nextTheme);
-    localStorage.setItem("theme", nextTheme);
-    
-    if (nextTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
-
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 transition-colors duration-300">
-      <Navbar theme={theme} toggleTheme={toggleTheme} />
-      
-      {/* Encabezado */}
+    <>
       <ContactoHeader />
 
-      {/* Contenido Principal */}
       <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
         <React.Suspense fallback={
           <div className="flex flex-col items-center justify-center py-20 gap-3 min-h-[450px]">
@@ -318,8 +284,7 @@ export default function ContactoPage() {
           <ContactoFormContent />
         </React.Suspense>
       </main>
-
-      <Footer />
-    </div>
+    </>
   );
 }
+

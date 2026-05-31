@@ -1,8 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { Info } from "lucide-react";
 import { getEmpresas, crearEmpresa } from "@/lib/infrastructure/api";
 import { IEmpresa } from "@/lib/domain/interfaces/empresa.interface";
@@ -12,7 +10,6 @@ import EmpresaForm from "@/components/empresas/EmpresaForm";
 import EmpresaHeader from "@/components/empresas/EmpresaHeader";
 
 export default function RegistroEmpresaPage() {
-  const [theme, setTheme] = React.useState<"light" | "dark" | null>(null);
   const [isDemoMode, setIsDemoMode] = React.useState(false);
 
   // Estados del Formulario
@@ -96,20 +93,7 @@ export default function RegistroEmpresaPage() {
     setLiveErrors(newErrors);
   }, [formData, touched]);
 
-  // Carga de Tema
   React.useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
-    
-    setTheme(initialTheme);
-    if (initialTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-
-    // Verificar si la API está viva
     async function checkApiConnection() {
       try {
         await getEmpresas();
@@ -120,19 +104,6 @@ export default function RegistroEmpresaPage() {
     }
     checkApiConnection();
   }, []);
-
-  const toggleTheme = () => {
-    if (!theme) return;
-    const nextTheme = theme === "light" ? "dark" : "light";
-    setTheme(nextTheme);
-    localStorage.setItem("theme", nextTheme);
-    
-    if (nextTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
 
   // Manejo de Inputs del Formulario
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -279,13 +250,9 @@ export default function RegistroEmpresaPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 transition-colors duration-300">
-      <Navbar theme={theme} toggleTheme={toggleTheme} />
-
-      {/* Encabezado Municipal */}
+    <>
       <EmpresaHeader />
 
-      {/* Banner de Modo Demostración */}
       {isDemoMode && (
         <div className="max-w-3xl mx-auto px-4 mt-6 w-full">
           <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200/50 dark:bg-amber-950/20 dark:border-amber-900/30 flex gap-3 items-start animate-in fade-in slide-in-from-top-3">
@@ -302,28 +269,24 @@ export default function RegistroEmpresaPage() {
         </div>
       )}
 
-      {/* Contenido Principal */}
-      <main className="flex-grow max-w-3xl mx-auto px-4 py-10 w-full">
-        {/* Usamos el formulario modular EmpresaForm */}
-        <div className="w-full">
-          <EmpresaForm
-            formData={formData}
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
-            submitting={submitting}
-            submitSuccess={submitSuccess}
-            setSubmitSuccess={setSubmitSuccess}
-            errorMessage={errorMessage}
-            validationErrors={validationErrors}
-            liveErrors={liveErrors}
-            touched={touched}
-            setTouched={setTouched}
-            setFormData={setFormData}
-          />
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+      <div className="flex-grow max-w-3xl mx-auto px-4 py-10 w-full">
+        <EmpresaForm
+          formData={formData}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          submitting={submitting}
+          submitSuccess={submitSuccess}
+          setSubmitSuccess={setSubmitSuccess}
+          errorMessage={errorMessage}
+          validationErrors={validationErrors}
+          liveErrors={liveErrors}
+          touched={touched}
+          setTouched={setTouched}
+          setFormData={setFormData}
+        />
+      </div>
+    </>
   );
 }
+
+
