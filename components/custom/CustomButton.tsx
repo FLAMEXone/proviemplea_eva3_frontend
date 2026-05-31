@@ -44,7 +44,7 @@ export interface CustomButtonProps
 const CustomButton = React.forwardRef<HTMLButtonElement, CustomButtonProps>(
   ({ className, theme, size, isLoading, leftIcon, rightIcon, children, disabled, asChild = false, ...props }, ref) => {
     if (asChild) {
-      const Comp = (props as any).as || "button";
+      const Comp = (props as { as?: React.ElementType }).as || "button";
       return (
         <Comp
           className={cn(customButtonVariants({ theme, size, className }))}

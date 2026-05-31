@@ -62,14 +62,15 @@ export default function RegistroEmpresaPage() {
         contacto_email: data.contacto_email,
         contacto_telefono: data.contacto_telefono || undefined,
         presentacion: data.presentacion || undefined,
-      } as any);
+      });
       setSubmitSuccess(true);
-    } catch (err: any) {
-      console.error("Error al registrar empresa:", err);
-      if (err.status === 422) {
+    } catch (err: unknown) {
+      const error = err as { status?: number; message?: string };
+      console.error("Error al registrar empresa:", error);
+      if (error.status === 422) {
         setServerError("Errores de validación. El RUT o el correo corporativo ya pueden estar en uso por otra empresa.");
       } else {
-        setServerError(err.message || "Ocurrió un error inesperado al registrar el convenio corporativo.");
+        setServerError(error.message || "Ocurrió un error inesperado al registrar el convenio corporativo.");
       }
     } finally {
       setSubmitting(false);

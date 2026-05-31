@@ -238,7 +238,6 @@ function ContactoFormContent() {
             validationErrors={validationErrors}
             setValidationErrors={setValidationErrors}
             liveErrors={liveErrors}
-            touched={touched}
             setTouched={setTouched}
             isDuplicated={isDuplicated}
           />

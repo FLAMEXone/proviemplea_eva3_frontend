@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Building, Building2, AlertCircle, AlertTriangle, Loader2, Send, MessageSquare } from "lucide-react";
+import { Building, Building2, AlertCircle, AlertTriangle, Send, MessageSquare } from "lucide-react";
+
 import { IEmpresa } from "@/lib/domain/interfaces/empresa.interface";
 import { CustomButton } from "@/components/custom/CustomButton";
 
@@ -22,10 +23,6 @@ interface ContactoFormProps {
   liveErrors: {
     selectedEmpresa: string;
     notes: string;
-  };
-  touched: {
-    selectedEmpresa: boolean;
-    notes: boolean;
   };
   setTouched: React.Dispatch<React.SetStateAction<{
     selectedEmpresa: boolean;
@@ -49,7 +46,6 @@ export default function ContactoForm({
   validationErrors,
   setValidationErrors,
   liveErrors,
-  touched,
   setTouched,
   isDuplicated
 }: ContactoFormProps) {

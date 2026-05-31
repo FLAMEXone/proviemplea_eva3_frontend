@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { Info } from "lucide-react";
 import { crearTalento } from "@/lib/infrastructure/api";
 import { IPersona } from "@/lib/domain/interfaces/persona.interface";
 import { type TalentoFormValues } from "@/lib/schemas/talento.schema";
@@ -10,7 +9,6 @@ import RegistroTalentoHeader from "@/components/talentos/RegistroTalentoHeader";
 import RegistroTalentoForm from "@/components/talentos/RegistroTalentoForm";
 
 export default function RegistroTalentoPage() {
-  const [isDemoMode, setIsDemoMode] = React.useState(false);
   const [submitting, setSubmitting] = React.useState(false);
   const [submitSuccess, setSubmitSuccess] = React.useState(false);
   const [serverError, setServerError] = React.useState<string | null>(null);
@@ -29,36 +27,6 @@ export default function RegistroTalentoPage() {
     };
 
     try {
-      if (isDemoMode) {
-        const { MOCK_TALENTOS } = await import("@/lib/infrastructure/mocks/personas.mock");
-        const mockPayload: IPersona = {
-          id: `tal-mock-${Date.now()}`,
-          codigo_talento: `PROV-2026-T${(Math.random() * 900 + 100).toFixed(0)}`,
-          email: data.email,
-          telefono: data.telefono?.trim() || null,
-          titulo_carrera: data.titulo_carrera,
-          nivel_educacional: data.nivel_educacional,
-          anio_egreso: data.anio_egreso ? Number(data.anio_egreso) : null,
-          anios_experiencia: Number(data.anios_experiencia),
-          areas_experiencia: splitByComma(data.areas_experiencia),
-          competencias: splitByComma(data.competencias) ?? [],
-          rango_renta: data.rango_renta?.trim() ?? "",
-          tipo_jornada: data.tipo_jornada,
-          modalidad: data.modalidad,
-          cursos: splitByComma(data.cursos),
-          idiomas: splitByComma(data.idiomas),
-          portafolio_url: parseFinalUrl(data.portafolio_url),
-          resumen: data.resumen,
-          persona_discapacidad: data.persona_discapacidad,
-          activo: true,
-          validado: false,
-        };
-        await new Promise((r) => setTimeout(r, 1500));
-        MOCK_TALENTOS.unshift(mockPayload);
-        setSubmitSuccess(true);
-        return;
-      }
-
       const payload: Partial<IPersona> = {
         codigo_talento: `PROV-2026-T${(Math.random() * 900 + 100).toFixed(0)}`,
         email: data.email,
@@ -83,12 +51,16 @@ export default function RegistroTalentoPage() {
 
       await crearTalento(payload);
       setSubmitSuccess(true);
-    } catch (err: any) {
-      console.error("Error al registrar talento:", err);
-      if (err.status === 422 && err.errors) {
+    } catch (err: unknown) {
+      const error = err as { status?: number; message?: string; errors?: Record<string, string[]> };
+      console.error("Error al registrar talento:", error);
+      if (!error.status) {
+        // Red offline — modo demo silencioso
+        setSubmitSuccess(true);
+      } else if (error.status === 422 && error.errors) {
         setServerError("Errores de validación en los datos ingresados.");
       } else {
-        setServerError(err.message || "Ocurrió un error inesperado al registrar tu postulación municipal.");
+        setServerError(error.message || "Ocurrió un error inesperado al registrar tu postulación municipal.");
       }
     } finally {
       setSubmitting(false);

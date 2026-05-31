@@ -4,7 +4,6 @@ import * as React from "react";
 import { 
   Loader2, 
   Search,
-  Sparkles,
   Database
 } from "lucide-react";
 import { getEmpresas } from "@/lib/infrastructure/api";
@@ -15,7 +14,6 @@ import { CustomBadge } from "@/components/custom/CustomBadge";
 export default function EmpresasPage() {
   const [empresas, setEmpresas] = React.useState<IEmpresa[]>([]);
   const [loading, setLoading] = React.useState(true);
-  const [isDemoMode, setIsDemoMode] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
 
   // Carga inicial de datos
@@ -24,10 +22,7 @@ export default function EmpresasPage() {
       try {
         const fetchedEmpresas = await getEmpresas();
         setEmpresas(fetchedEmpresas);
-      } catch (err) {
-        console.warn("Laravel API offline, activando Modo Demostración en directorio:", err);
-        setIsDemoMode(true);
-        
+      } catch {
         const { MOCK_EMPRESAS } = await import("@/lib/infrastructure/mocks/empresa.mock");
         setEmpresas(MOCK_EMPRESAS);
       } finally {

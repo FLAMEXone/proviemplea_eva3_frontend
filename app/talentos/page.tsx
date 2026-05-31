@@ -10,12 +10,6 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 type ValidadoFilter = "todos" | "validados" | "pendientes";
 
-const FILTER_OPTIONS: { value: ValidadoFilter; label: string; icon: React.ReactNode }[] = [
-  { value: "todos",      label: "Todos",      icon: <LayoutList   className="w-3.5 h-3.5" /> },
-  { value: "validados",  label: "Validados",  icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
-  { value: "pendientes", label: "Pendientes", icon: <Clock        className="w-3.5 h-3.5" /> },
-];
-
 export default function TalentosPage() {
   const [talentos, setTalentos] = React.useState<IPersona[]>([]);
   const [loading, setLoading] = React.useState(true);
