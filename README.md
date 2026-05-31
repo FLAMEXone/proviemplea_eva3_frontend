@@ -22,7 +22,9 @@ proviemplea_eva3_Frontend/
 ├── app/                         # Enrutador App Router de Next.js
 │   ├── contacto/                # /contacto — Solicitudes de Intermediación
 │   │   └── page.tsx             # Container Component (Controlador lógico)
-│   ├── empresas/                # /empresas — Vitrina Corporativa de Talentos
+│   ├── empresas/                # /empresas — Directorio Corporativo de Convenios
+│   │   └── page.tsx             # Container Component (Controlador lógico)
+│   ├── registro-empresa/        # /registro-empresa — Inscripción de Empresas
 │   │   └── page.tsx             # Container Component (Controlador lógico)
 │   ├── registro-talento/        # /registro-talento — Inscripción de Talentos
 │   │   └── page.tsx             # Container Component (Controlador lógico)
@@ -73,8 +75,8 @@ Para certificar el nivel **Sobresaliente** en calidad de software y accesibilida
 *   Las páginas en `app/` actúan exclusivamente como **Container Components** (gestión de estado de carga, query params de búsqueda, hooks y llamadas de red a la API).
 *   La interfaz de usuario se desvincula por completo y vive en subcomponentes atómicos de presentación (`components/`), alimentados exclusivamente por `props` tipadas de lectura.
 
-### 4. Validaciones Reactivas en Vivo (Live Errors)
-*   Para evitar formularios frustrantes, el frontend gestiona estados reactivos `liveErrors` y `touched`. Los errores se calculan al instante en que el usuario interactúa con el teclado (`onChange`), y se desvanecen automáticamente una vez que el campo cumple con las reglas, sin persistir estáticamente tras submits fallidos.
+### 4. Validaciones Reactivas `onTouched` con React Hook Form
+*   Los formularios principales (`RegistroTalentoForm`, `EmpresaForm`) están integrados con **React Hook Form** y **Zod** en modo `onTouched`. Esto significa que el error se activa en el momento exacto en que el usuario abandona un campo (blur), y desaparece en tiempo real mientras escribe una corrección, sin esperar al submit. El formulario de contacto (`ContactoForm`) implementa el mismo comportamiento con estado local `liveErrors` + `touched`, adaptado a su flujo de selección dinámica de empresa.
 
 ### 5. Validación Matemática Estricta de RUT (Sin Puntos)
 *   **Algoritmo matemático real chileno:** Implementado en `lib/utils.ts` mediante cálculo de suma ponderada y dígito verificador módulo 11.
@@ -103,55 +105,93 @@ Para certificar el nivel **Sobresaliente** en calidad de software y accesibilida
 ## 🚀 Instrucciones de Instalación y Uso
 
 ### 1. Requisitos Previos
-*   **Node.js 18.0 o superior**
-*   **npm** o **yarn**
-*   *Recomendado:* Backend de Laravel corriendo localmente en `http://localhost:8080` (con CORS habilitado).
+*   **Node.js 18.0 o superior** — [Descargar aquí](https://nodejs.org/)
+*   **npm** (incluido con Node.js) o **yarn**
+*   **Git** — [Descargar aquí](https://git-scm.com/)
+*   *Recomendado:* Backend de Laravel corriendo localmente en `http://localhost:8080`.
+    > 🔗 Repositorio del backend: [ginans/proviemplea_eva3](https://github.com/ginans/proviemplea_eva3)
 
-### 2. Configuración
-Crea un archivo `.env.local` en la raíz del proyecto y apunta la URL base de tu backend real:
+### 2. Clonar el Repositorio
+
+Abre una terminal (CMD, PowerShell o Terminal de VS Code) y ejecuta:
+
+```bash
+git clone https://github.com/ginans/proviemplea_eva3_Frontend.git
+cd proviemplea_eva3_Frontend
+```
+
+### 3. Configuración de Variables de Entorno
+
+Crea un archivo llamado `.env.local` en la raíz del proyecto (al mismo nivel que `package.json`) con el siguiente contenido:
+
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8080/api
 ```
 
-### 3. Instalación e Inicio de Servidor
-```bash
-# 1. Instalar dependencias oficiales
-npm install
+> ⚠️ Si el backend no está disponible, la aplicación cambia automáticamente a **Modo Demostración** con datos locales de ejemplo. No es necesario tenerlo corriendo para evaluar el frontend.
 
-# 2. Iniciar servidor de desarrollo en caliente
+### 4. Instalar Dependencias
+
+```bash
+npm install
+```
+
+Este comando descarga todas las librerías del proyecto (Next.js, shadcn/ui, React Hook Form, etc.). Puede tardar unos minutos la primera vez.
+
+### 5. Iniciar el Servidor de Desarrollo
+
+```bash
 npm run dev
 ```
+
 Abre [http://localhost:3000](http://localhost:3000) en tu navegador para interactuar con la aplicación.
 
----
+### 6. (Opcional) Generar Build de Producción
 
-## 👥 Plan de Acción de la Retrospectiva de Equipo (Tarea 11)
-
-Llevamos a cabo una sesión de retrospectiva estructurada con el equipo de desarrollo conformado por **Gina**, **Fabián** y **Gem (Technical AI Partner)**, utilizando la metodología **Starfish (Estrella de Mar)**:
-
-### 1. Lo que funcionó de forma excelente (Mantener)
-*   **Integración y Conectividad Híbrida:** El diseño resiliente que cambia de API real a Modo Demo local en memoria automáticamente evitó bloqueos y permitió evaluar el flujo de frontend sin depender obligatoriamente del backend.
-*   **Refactorización Modular Extrema:** El desacoplamiento en subcomponentes de presentación (`components/`) mantuvo el App Router sumamente legible y con un control de TypeScript impecable.
-*   **Validaciones en Vivo Robustas:** El flujo de teclado reactivo entregó una UX de primer nivel que los evaluadores apreciarán significativamente.
-
-### 2. Lecciones Aprendidas (Lo que podemos mejorar)
-*   **Saneamiento de Mocks al Inicio:** Inicialmente, los mocks de empresas contenían puntos en sus RUTs, lo cual entraba en conflicto con el validador estricto del frontend. Homologar la data mockeada al inicio nos habría ahorrado tiempo.
-*   **Segregación Temprana:** Definir las carpetas `lib/domain` al inicio de la codificación habría prevenido interfaces huérfanas temporales.
-
-### 3. Plan de Acción de 4 Puntos Clave para la Próxima Iteración:
-1.  **Auditoría Lighthouse en Producción:** Ejecutar una auditoría de accesibilidad WCAG 2.1 automatizada en entorno de staging y aplicar parches inmediatos de contraste dinámico.
-2.  **Integración de reCAPTCHA v3:** Agregar una validación invisible con reCAPTCHA v3 sobre el Honeypot actual para blindar las solicitudes contra ataques avanzados distribuidos de spam.
-3.  **Filtros Avanzados Multiparámetro:** Expandir la barra de búsqueda de la vitrina exclusiva de `/empresas` para filtrar en tiempo real por años de experiencia (rango numérico) y modalidad.
-4.  **Flujo de Notificación de Intermediación:** Diseñar el envío automatizado de correos desde Laravel al Representante Legal de la empresa cuando una intermediación es visada por el Administrador.
+```bash
+npm run build
+npm start
+```
 
 ---
 
-## 📦 Formato Reglamentario de Entrega
+## 🔄 Proceso de Desarrollo y Aprendizajes del Equipo
 
-Para realizar la entrega oficial del examen a la plataforma educativa:
-1.  Asegurar que no queden errores estáticos corriendo:
-    ```bash
-    npx tsc --noEmit
-    ```
-2.  Comprimir la carpeta completa del proyecto en un archivo `.zip` bajo el formato oficial y obligatorio:
-    *   **`Eval_U3A_NOMBRE_DEL_EQUIPO.zip`**
+El equipo llevó a cabo una retrospectiva estructurada al finalizar el ciclo de desarrollo, utilizando la metodología **Starfish**. A continuación se documentan los hallazgos más relevantes.
+
+### Decisiones que funcionaron bien
+
+*   **Arquitectura resiliente con fallback local:** Implementar un cliente de red con conmutación automática a datos de demostración permitió desarrollar y validar el frontend de forma completamente independiente del backend, eliminando bloqueos de integración.
+*   **Separación estricta de capas:** El patrón Container & Presentational Components mantuvo las páginas enfocadas en lógica de estado y las convirtió en componentes de presentación completamente reutilizables y testeables.
+*   **Validación con React Hook Form + Zod:** La integración en modo `onTouched` eliminó la fricción de los formularios tradicionales, ofreciendo retroalimentación inmediata al usuario sin esperar el submit.
+
+### Lecciones aprendidas
+
+*   **Estandarizar los datos de prueba desde el inicio:** Los mocks iniciales de empresas contenían RUTs con formato incorrecto, lo que generó conflictos con el validador matemático estricto. Definir un contrato de datos mock desde el comienzo habría evitado esos desvíos.
+*   **Definir el dominio antes de codificar:** Las interfaces y enums de `lib/domain/` debieron existir antes de los primeros componentes para evitar tipados duplicados o huérfanos durante el desarrollo.
+
+### Roadmap para iteraciones futuras
+
+1.  **Auditoría de accesibilidad en producción:** Ejecutar Lighthouse y axe-core en un entorno de staging para validar conformidad WCAG 2.1 y aplicar mejoras de contraste y foco.
+2.  **Protección anti-spam avanzada:** Complementar el honeypot actual con reCAPTCHA v3 invisible para blindar los formularios contra bots distribuidos.
+3.  **Filtros avanzados en la vitrina de talentos:** Expandir el panel de filtros para permitir rangos numéricos de experiencia, modalidad y renta esperada en tiempo real.
+4.  **Notificaciones automáticas de intermediación:** Implementar envío de correos transaccionales desde el backend cuando el equipo municipal apruebe una solicitud de intermediación.
+5.  **Estado global con Zustand:** Introducir un store centralizado (`useTalentosStore`, `useEmpresasStore`) para cachear los datos de red entre navegaciones. Actualmente cada página re-fetcha la API al montarse; con Zustand y un TTL simple, la vitrina de talentos y el directorio de empresas cargarían instantáneamente tras la primera visita, reduciendo la carga sobre el backend.
+
+---
+
+## 👥 Integrantes y Autoría
+
+*   **Nombre del Equipo:** *Grupo 1*
+*   **Integrantes:**
+    *   Gina Norambuena Sánchez
+    *   Fabian Malinarich Piña
+
+---
+
+### 🤖 Colaboración y Asistencia de IA
+
+Este proyecto frontend ha sido desarrollado en una modalidad de **Pair Programming** asistida por **Gem**, un modelo de Inteligencia Artificial de Google DeepMind.
+
+*   **Alcance del Soporte:** La IA actuó como consultor técnico y tutor en la estructuración de la estrategia de ramas en Git, la organización de hitos y tareas, la adopción de buenas prácticas arquitectónicas en Next.js 14, en la revisión de cobertura de la documentación y documentación de este README.
+*   **Desarrollo del Proyecto:** La lógica de negocio, codificación de componentes, modelado de interfaces de dominio y la intermediación laboral de ProviEmplea fueron diseñadas, implementadas y verificadas íntegramente por los integrantes del **Grupo 1**.

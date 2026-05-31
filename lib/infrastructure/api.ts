@@ -120,3 +120,19 @@ export async function crearTalento(data: Partial<IPersona>): Promise<IPersona> {
   });
 }
 
+/**
+ * Verificar conectividad con el backend municipal.
+ * GET /api/health
+ * Retorna true si el servidor responde, false si está offline.
+ */
+export async function checkHealth(): Promise<boolean> {
+  try {
+    const response = await fetch(`${BASE_URL}/health`, {
+      method: "GET",
+      signal: AbortSignal.timeout(4000),
+    });
+    return response.ok;
+  } catch {
+    return false;
+  }
+}

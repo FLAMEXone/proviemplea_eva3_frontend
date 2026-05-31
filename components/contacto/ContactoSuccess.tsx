@@ -13,7 +13,6 @@ interface ContactoSuccessProps {
 }
 
 export default function ContactoSuccess({ talento, empresas, selectedEmpresa }: ContactoSuccessProps) {
-  // Memoizar el código de proceso para evitar regeneraciones en re-renders visuales
   const codigoProceso = React.useMemo(() => {
     return `PROV-INT-${(Math.random() * 100000).toFixed(0)}`;
   }, []);
@@ -67,7 +66,7 @@ export default function ContactoSuccess({ talento, empresas, selectedEmpresa }: 
       </div>
 
       <p className="text-xs text-slate-400 dark:text-slate-500 max-w-sm mx-auto mb-8">
-        El departamento de Empleo y Capacitación de Providencia revisará los antecedentes y se pondrá en contacto con el reclutador para coordinar la entrevista.
+        El departamento de Empleo y Capacitación de la Municipalidad de Providencia revisará los antecedentes y se pondrá en contacto con el reclutador para coordinar la entrevista.
       </p>
 
       <Link

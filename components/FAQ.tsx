@@ -13,7 +13,7 @@ export default function FAQ() {
       id: "faq-1",
       question: "¿Qué es el modelo de búsqueda inversa de empleo?",
       answer:
-        "Es un modelo disruptivo donde se invierte el flujo tradicional: en lugar de que los candidatos postulen a ofertas de empleo enviando currículums masivos, las empresas e instituciones empleadoras acreditadas son quienes buscan proactivamente a los talentos idóneos dentro de nuestra vitrina digital de Providencia.",
+        "Es un modelo disruptivo donde se invierte el flujo tradicional: en lugar de que los candidatos postulen a ofertas de empleo enviando currículums masivos, las empresas e instituciones empleadoras acreditadas son quienes buscan proactivamente a los talentos idóneos dentro de nuestra vitrina digital.",
     },
     {
       id: "faq-2",

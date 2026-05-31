@@ -1,8 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { Building, Building2, AlertCircle, AlertTriangle, Loader2, Send, MessageSquare } from "lucide-react";
+import { Building, Building2, AlertCircle, AlertTriangle, Send, MessageSquare } from "lucide-react";
+
 import { IEmpresa } from "@/lib/domain/interfaces/empresa.interface";
+import { CustomButton } from "@/components/custom/CustomButton";
 
 interface ContactoFormProps {
   empresas: IEmpresa[];
@@ -21,10 +23,6 @@ interface ContactoFormProps {
   liveErrors: {
     selectedEmpresa: string;
     notes: string;
-  };
-  touched: {
-    selectedEmpresa: boolean;
-    notes: boolean;
   };
   setTouched: React.Dispatch<React.SetStateAction<{
     selectedEmpresa: boolean;
@@ -48,7 +46,6 @@ export default function ContactoForm({
   validationErrors,
   setValidationErrors,
   liveErrors,
-  touched,
   setTouched,
   isDuplicated
 }: ContactoFormProps) {
@@ -60,7 +57,7 @@ export default function ContactoForm({
           Formulario de Intermediación
         </h3>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-          Ingresa los datos para solicitar la vinculación a través del equipo de empleo de Providencia.
+          Ingresa los datos para solicitar la vinculación a través del equipo de empleo de la Municipalidad de Providencia.
         </p>
       </div>
 
@@ -146,7 +143,7 @@ export default function ContactoForm({
             </p>
           )}
           <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-2 leading-relaxed">
-            Solo se despliegan empresas activas con convenio de empleo vigente en Providencia.
+            Solo se despliegan empresas activas con convenio de empleo vigente.
           </p>
         </div>
 
@@ -199,24 +196,16 @@ export default function ContactoForm({
           </p>
         </div>
 
-        {/* Botón de Enviar */}
-        <button
+        <CustomButton
           type="submit"
-          disabled={submitting}
-          className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-2xl transition-all shadow-md shadow-blue-500/10 hover:shadow-blue-500/20 disabled:opacity-50"
+          theme="blue"
+          size="default"
+          isLoading={submitting}
+          rightIcon={<Send className="w-3.5 h-3.5" />}
+          className="w-full py-3.5"
         >
-          {submitting ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Procesando con Servidores Municipales...
-            </>
-          ) : (
-            <>
-              Enviar Solicitud de Intermediación
-              <Send className="w-3.5 h-3.5" />
-            </>
-          )}
-        </button>
+          {submitting ? "Procesando con Servidores Municipales..." : "Enviar Solicitud de Intermediación"}
+        </CustomButton>
       </form>
     </div>
   );
