@@ -4,6 +4,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { CustomBadge } from "@/components/custom/CustomBadge";
+import { Lightbulb } from "lucide-react";
 
 export default function FAQ() {
   const faqs = [
@@ -37,9 +39,13 @@ export default function FAQ() {
     <section id="faqs" className="w-full py-20 sm:py-28 bg-white text-slate-800 border-b border-slate-100 dark:bg-slate-950 dark:text-slate-200 dark:border-slate-900">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <div className="text-center flex flex-col gap-4 mb-12">
-          <div className="inline-flex self-center items-center gap-2 rounded-full bg-blue-100 dark:bg-blue-900/30 px-3 py-1 text-xs font-bold tracking-wide text-blue-700 dark:text-blue-400 uppercase">
-            💡 Dudas Frecuentes
-          </div>
+          <CustomBadge 
+            color="blue" 
+            size="md" 
+            text="Dudas Frecuentes" 
+            icon={<Lightbulb className="w-3.5 h-3.5" />}
+            className="self-center uppercase tracking-wide"
+          />
           <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
             Preguntas Frecuentes del Portal
           </h2>

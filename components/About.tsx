@@ -1,4 +1,5 @@
-import { EyeOff, Accessibility, Zap } from "lucide-react";
+import { EyeOff, Accessibility, Zap, ShieldCheck } from "lucide-react";
+import { CustomBadge } from "@/components/custom/CustomBadge";
 
 export default function About() {
   const pillars = [
@@ -28,9 +29,13 @@ export default function About() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Text content */}
           <div className="flex flex-col gap-6">
-            <div className="inline-flex self-start items-center gap-2 rounded-full bg-blue-100 dark:bg-blue-900/30 px-3 py-1 text-xs font-bold tracking-wide text-blue-700 dark:text-blue-400 uppercase">
-              🛡️ Selección Sin Sesgos
-            </div>
+            <CustomBadge 
+              color="blue" 
+              size="md" 
+              text="Selección Sin Sesgos" 
+              icon={<ShieldCheck className="w-3.5 h-3.5" />}
+              className="self-start uppercase tracking-wide"
+            />
             <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
               Un paso adelante en la equidad laboral municipal.
             </h2>
